@@ -1,3 +1,7 @@
-from django.contrib import admin
+from django.apps import AppConfig
 
-# Register your models here.
+class UtentiConfig(AppConfig):
+    name = 'apps.utenti'
+
+    def ready(self):
+        import apps.utenti.models  
