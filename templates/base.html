@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Falesya - Arrampicata</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"><a href="{% url 'falesie:home' %}">FALESYA</a></div>
+            
+            <form action="{% url 'falesie:ricerca' %}" method="GET">
+                <input type="text" name="q" placeholder="Cerca falesia o comune...">
+                <button type="submit">Cerca</button>
+            </form>
+
+            <div class="nav-links">
+                <a href="{% url 'falesie:mappa' %}">Mappa</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'utenti:profilo' %}">Profilo</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Falesya - Portale Arrampicata</p>
+    </footer>
+</body>
+</html>

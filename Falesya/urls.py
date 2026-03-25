@@ -15,8 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Colleghiamo le app
+    path('', include('apps.falesie.urls')), 
+    path('utenti/', include('apps.utenti.urls')),
+    
+    # Sistema di autenticazione di default (Login/Logout)
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
+
+# Fondamentale per vedere le immagini delle falesie in fase di sviluppo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_address=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_address=settings.STATIC_ROOT)

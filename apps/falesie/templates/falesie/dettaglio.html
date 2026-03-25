@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="falesia-detail-container">
+    <div class="header-falesia">
+        <h1>{{ falesia.nome }}</h1>
+        <span class="badge">Difficoltà Media: {{ falesia.calcola_media }}</span>
+    </div>
+
+    <div class="descrizione">
+        <p>{{ falesia.descrizione }}</p>
+    </div>
+
+    <section class="percorsi-list">
+        <h3>Elenco Percorsi</h3>
+        <ul>
+            {% for percorso in falesia.percorsi.all %}
+                <li><strong>{{ percorso.nome }}</strong> - Grado: {{ percorso.grado }} ({{ percorso.altezza }}m)</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="commenti">
+        <h3>Commenti degli utenti</h3>
+        {% for commento in falesia.commenti.all %}
+            <div class="comment-box">
+                <strong>{{ commento.utente.username }}</strong>
+                <p>{{ commento.testo }}</p>
+            </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

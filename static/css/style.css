@@ -1,0 +1,159 @@
+/* static/css/style.css */
+
+:root {
+    --primary-color: #2c3e50; /* Blu scuro professionale */
+    --accent-color: #e74c3c;  /* Rosso per bottoni/errori */
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* --- NAVBAR (Header) --- */
+header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+/* Box di ricerca nel centro (come da wireframe) */
+nav form {
+    display: flex;
+    gap: 5px;
+}
+
+nav input[type="text"] {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    width: 250px;
+}
+
+/* --- LAYOUT GRID (Home Page) --- */
+.falesia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.falesia-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.falesia-card:hover {
+    transform: translateY(-5px);
+}
+
+.falesia-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.falesia-card-content {
+    padding: 15px;
+}
+
+/* --- DETTAGLIO FALESIA --- */
+.falesia-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.info-box {
+    background: #e9ecef;
+    padding: 15px;
+    border-left: 5px solid var(--primary-color);
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* --- PROFILO (Sidebar Layout) --- */
+.profilo-grid {
+    display: flex;
+    max-width: 1100px;
+    margin: 40px auto;
+    gap: 30px;
+}
+
+.profilo-sidebar {
+    flex: 1;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+}
+
+.profilo-sidebar img {
+    width: 100%;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.profilo-main {
+    flex: 3;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* --- BOTTONI --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #34495e;
+}

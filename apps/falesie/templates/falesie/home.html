@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<div class="container">
+    <section class="search-results">
+        <h1>Esplora le Falesie</h1>
+        
+        <div class="falesia-grid">
+            {% for falesia in falesie %}
+                <div class="falesia-card">
+                    <img src="{{ falesia.immagine.url }}" alt="{{ falesia.nome }}">
+                    <h3>{{ falesia.nome }}</h3>
+                    <p>Comune: {{ falesia.comune }}</p>
+                    <p>Gradi: {{ falesia.difficolta_min }} - {{ falesia.difficolta_max }}</p>
+                    <a href="{% url 'falesie:dettaglio' falesia.id %}" class="btn">Vedi Dettagli</a>
+                </div>
+            {% empty %}
+                <p>Nessuna falesia trovata con questi criteri.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

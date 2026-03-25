@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="profilo-grid">
+    <aside class="profilo-sidebar">
+        <img src="{{ user.profilo.immagine.url }}" alt="Foto Profilo">
+        <h2>{{ user.username }}</h2>
+        <ul>
+            <li><a href="#">Impostazioni</a></li>
+            <li><a href="#">I miei Preferiti</a></li>
+            <li><a href="#">I miei Commenti</a></li>
+            <li class="danger"><a href="#">Elimina Profilo</a></li>
+        </ul>
+    </aside>
+
+    <section class="profilo-main">
+        <h3>Dati Account</h3>
+        <p>Email: {{ user.email }}</p>
+        <p>Data iscrizione: {{ user.date_joined|date:"d/m/Y" }}</p>
+    </section>
+</div>
+{% endblock %}
