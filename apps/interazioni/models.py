@@ -17,10 +17,17 @@ class Commento(models.Model):
 
 
 class Valutazione(models.Model):
+    VOTO_CHOICES = [
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+    ]
     utente = models.ForeignKey(User, on_delete=models.CASCADE)
     falesia = models.ForeignKey(Falesia, on_delete=models.CASCADE, null=True, blank=True)
     percorso = models.ForeignKey(Percorso, on_delete=models.CASCADE, null=True, blank=True)
-    voto = models.IntegerField()
+    voto = models.IntegerField(choices=VOTO_CHOICES)
 
 class Preferito(models.Model):
     utente = models.ForeignKey(User, on_delete=models.CASCADE)
