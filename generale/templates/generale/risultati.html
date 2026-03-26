@@ -1,0 +1,33 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<h1>Risultati ricerca: "{{ query }}"</h1>
+
+{% if falesie %}
+    <h2>Falesie</h2>
+    {% for falesia in falesie %}
+        <div class="card">
+            <a href="{% url 'dettaglio_falesia' falesia.id %}">
+                <h3>{{ falesia.nome }}</h3>
+            </a>
+            <p>{{ falesia.regione }} — {{ falesia.tipo_roccia }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if percorsi %}
+    <h2>Percorsi</h2>
+    {% for percorso in percorsi %}
+        <div class="card">
+            <a href="{% url 'dettaglio_percorso' percorso.id %}">
+                <h3>{{ percorso.nome }}</h3>
+            </a>
+            <p>Grado: {{ percorso.grado }} — Tipo: {{ percorso.tipo }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if not falesie and not percorsi %}
+    <p>Nessun risultato trovato.</p>
+{% endif %}
+{% endblock %}

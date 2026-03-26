@@ -1,0 +1,41 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<h1>{{ percorso.nome }}</h1>
+
+<div class="dettaglio-header">
+    {% if percorso.immagine %}
+        <img src="{{ percorso.immagine.url }}" alt="{{ percorso.nome }}">
+    {% endif %}
+    <div class="dati">
+        <p><strong>Falesia:</strong> 
+            <a href="{% url 'dettaglio_falesia' percorso.falesia.id %}">
+                {{ percorso.falesia.nome }}
+            </a>
+        </p>
+        <p><strong>Grado:</strong> {{ percorso.grado }}</p>
+        <p><strong>Tipo:</strong> {{ percorso.get_tipo_display }}</p>
+        <p><strong>Altezza:</strong> {{ percorso.altezza }} m</p>
+        <p><strong>Numero soste:</strong> {{ percorso.n_soste }}</p>
+        <p><strong>Numero spittature:</strong> {{ percorso.n_spittature }}</p>
+        <p><strong>Distanza spit:</strong> {{ percorso.distanza_spit }} m</p>
+    </div>
+</div>
+
+<div class="descrizione">
+    <h2>Descrizione</h2>
+    <p>{{ percorso.descrizione }}</p>
+</div>
+
+<div class="commenti">
+    <h2>Commenti</h2>
+    {% for commento in commenti %}
+        <div class="commento">
+            <strong>{{ commento.utente.username }}</strong> — {{ commento.data|date:"d/m/Y" }}
+            <p>{{ commento.testo }}</p>
+        </div>
+    {% empty %}
+        <p>Nessun commento ancora.</p>
+    {% endfor %}
+</div>
+{% endblock %}
