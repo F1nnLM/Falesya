@@ -1,0 +1,23 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<section class="hero">
+    <div class="ricerca-box">
+        <h1>Trova la tua falesia</h1>
+        <form action="{% url 'risultati' %}" method="GET">
+            <input type="text" name="q" placeholder="Cerca per nome...">
+            <select name="tipo">
+                <option value="">Tutto</option>
+                <option value="falesia">Falesie</option>
+                <option value="percorso">Percorsi</option>
+            </select>
+            <button type="submit">Cerca</button>
+        </form>
+    </div>
+</section>
+
+<section class="info-sito">
+    <h2>Cos'è Falesya?</h2>
+    <p>La guida digitale per gli arrampicatori. Trova falesie, consulta i percorsi e condividi le tue esperienze.</p>
+</section>
+{% endblock %}

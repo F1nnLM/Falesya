@@ -1,0 +1,49 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<h1>{{ falesia.nome }}</h1>
+
+<div class="dettaglio-header">
+    {% if falesia.immagine %}
+        <img src="{{ falesia.immagine.url }}" alt="{{ falesia.nome }}">
+    {% endif %}
+    <div class="dati">
+        <p><strong>Tipo roccia:</strong> {{ falesia.get_tipo_roccia_display }}</p>
+        <p><strong>Esposizione:</strong> {{ falesia.get_esposizione_display }}</p>
+        <p><strong>Stagione consigliata:</strong> {{ falesia.get_stagione_consigliata_display }}</p>
+        <p><strong>Comune:</strong> {{ falesia.comune }}, {{ falesia.provincia }}</p>
+        <p><strong>Regione:</strong> {{ falesia.regione }}, {{ falesia.paese }}</p>
+    </div>
+</div>
+
+<div class="descrizione">
+    <h2>Descrizione</h2>
+    <p>{{ falesia.descrizione }}</p>
+</div>
+
+<div class="percorsi">
+    <h2>Percorsi</h2>
+    {% for percorso in percorsi %}
+        <div class="card">
+            <a href="{% url 'dettaglio_percorso' percorso.id %}">
+                <h3>{{ percorso.nome }}</h3>
+            </a>
+            <p>Grado: {{ percorso.grado }} — Tipo: {{ percorso.get_tipo_display }}</p>
+        </div>
+    {% empty %}
+        <p>Nessun percorso disponibile.</p>
+    {% endfor %}
+</div>
+
+<div class="commenti">
+    <h2>Commenti</h2>
+    {% for commento in commenti %}
+        <div class="commento">
+            <strong>{{ commento.utente.username }}</strong> — {{ commento.data|date:"d/m/Y" }}
+            <p>{{ commento.testo }}</p>
+        </div>
+    {% empty %}
+        <p>Nessun commento ancora.</p>
+    {% endfor %}
+</div>
+{% endblock %}
