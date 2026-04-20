@@ -1,0 +1,61 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<h1>Profilo di {{ user.username }}</h1>
+
+<div class="dettaglio-header">
+    <div class="avatar-wrapper-grande">
+        {% if user.profilo.immagine_profilo %}
+            <img src="{{ user.profilo.immagine_profilo.url }}"
+                 alt="{{ user.username }}" class="avatar-grande">
+        {% else %}
+            <div class="avatar-grande avatar-placeholder-grande">
+                {{ user.username|first|upper }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="dati">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+
+        <form method="POST" enctype="multipart/form-data" class="form-immagine">
+            {% csrf_token %}
+            <label>Cambia immagine profilo</label>
+            {{ form_img.immagine_profilo }}
+            <button type="submit" class="btn-primario btn-small">Salva</button>
+        </form>
+    </div>
+</div>
+
+<div class="commenti">
+    <h2>I tuoi commenti</h2>
+    {% for commento in commenti_utente %}
+        <div class="commento">
+            <div class="commento-header">
+                <div>
+                    {% if commento.falesia %}
+                        <a href="{% url 'dettaglio_falesia' commento.falesia.id %}">
+                            {{ commento.falesia.nome }}
+                        </a>
+                    {% elif commento.percorso %}
+                        <a href="{% url 'dettaglio_percorso' commento.percorso.id %}">
+                            {{ commento.percorso.nome }}
+                        </a>
+                    {% endif %}
+                    <span class="data-commento">{{ commento.data|date:"d/m/Y" }}</span>
+                </div>
+                <form method="POST" action="{% url 'elimina_commento' commento.id %}"
+                      class="form-elimina"
+                      onsubmit="return confirm('Eliminare questo commento?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-elimina">✕</button>
+                </form>
+            </div>
+            <p>{{ commento.testo }}</p>
+        </div>
+    {% empty %}
+        <p>Non hai ancora lasciato commenti.</p>
+    {% endfor %}
+</div>
+{% endblock %}

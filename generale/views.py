@@ -1,7 +1,15 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Falesia, Percorso
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.db.models import Avg
 
-# Lista ordinata dei gradi francesi — usata per il filtraggio per range
+from .models import Falesia, Percorso, Commento, Valutazione
+from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine
+
+# ── COSTANTI ──────────────────────────────────────────────────────────────────
+
 GRADI_ORDINATI = [
     '1', '2', '3',
     '4a', '4b', '4c',
@@ -19,6 +27,8 @@ REGIONI_ITALIANE = [
 ]
 
 
+# ── HOME ──────────────────────────────────────────────────────────────────────
+
 def home(request):
     return render(request, 'generale/home.html', {
         'gradi': GRADI_ORDINATI,
@@ -26,43 +36,38 @@ def home(request):
     })
 
 
+# ── RICERCA / FILTRI ──────────────────────────────────────────────────────────
+
 def risultati(request):
-    query        = request.GET.get('q', '')
-    regione      = request.GET.get('regione', '')
-    grado_min    = request.GET.get('grado_min', '')
-    grado_max    = request.GET.get('grado_max', '')
+    query         = request.GET.get('q', '')
+    regione       = request.GET.get('regione', '')
+    grado_min     = request.GET.get('grado_min', '')
+    grado_max     = request.GET.get('grado_max', '')
     tipo_percorso = request.GET.get('tipo_percorso', '')
-    ordine       = request.GET.get('ordine', 'nome')
+    ordine        = request.GET.get('ordine', 'nome')
 
     falesie  = Falesia.objects.all()
     percorsi = Percorso.objects.all()
 
-    # --- filtro per nome ---
     if query:
         falesie  = falesie.filter(nome__icontains=query)
         percorsi = percorsi.filter(nome__icontains=query)
 
-    # --- filtro per regione (solo falesie) ---
     if regione:
         falesie  = falesie.filter(regione__iexact=regione)
-        # i percorsi appartengono a falesie: filtriamo via FK
         percorsi = percorsi.filter(falesia__regione__iexact=regione)
 
-    # --- filtro per range grado (solo percorsi) ---
     if grado_min or grado_max:
         idx_min = GRADI_ORDINATI.index(grado_min) if grado_min in GRADI_ORDINATI else 0
         idx_max = GRADI_ORDINATI.index(grado_max) if grado_max in GRADI_ORDINATI else len(GRADI_ORDINATI) - 1
         gradi_validi = GRADI_ORDINATI[idx_min: idx_max + 1]
         percorsi = percorsi.filter(grado__in=gradi_validi)
 
-    # --- filtro per tipo percorso ---
     if tipo_percorso:
         percorsi = percorsi.filter(tipo=tipo_percorso)
-        falesie  = Falesia.objects.none()   # se filtri per tipo percorso non ha senso mostrare falesie
+        falesie  = Falesia.objects.none()
 
-    # --- ordinamento ---
     if ordine == 'grado':
-        # ordinamento personalizzato per grado: annotiamo la posizione nella lista
         from django.db.models import Case, When, IntegerField
         order_cases = [When(grado=g, then=i) for i, g in enumerate(GRADI_ORDINATI)]
         percorsi = percorsi.annotate(
@@ -74,34 +79,185 @@ def risultati(request):
         percorsi = percorsi.order_by('nome')
 
     return render(request, 'generale/risultati.html', {
-        'falesie':       falesie,
-        'percorsi':      percorsi,
-        'query':         query,
-        'regione':       regione,
-        'grado_min':     grado_min,
-        'grado_max':     grado_max,
-        'tipo_percorso': tipo_percorso,
-        'ordine':        ordine,
-        'gradi':         GRADI_ORDINATI,
-        'regioni':       REGIONI_ITALIANE,
+        'falesie':        falesie,
+        'percorsi':       percorsi,
+        'query':          query,
+        'regione':        regione,
+        'grado_min':      grado_min,
+        'grado_max':      grado_max,
+        'tipo_percorso':  tipo_percorso,
+        'ordine':         ordine,
+        'gradi':          GRADI_ORDINATI,
+        'regioni':        REGIONI_ITALIANE,
     })
 
+
+# ── DETTAGLIO FALESIA ─────────────────────────────────────────────────────────
 
 def dettaglio_falesia(request, id):
     falesia  = get_object_or_404(Falesia, id=id)
     percorsi = falesia.percorsi.all()
-    commenti = falesia.commento_set.all()
+    commenti = falesia.commento_set.select_related('utente__profilo').order_by('-data')
+
+    media_voto = Valutazione.objects.filter(falesia=falesia).aggregate(Avg('voto'))['voto__avg']
+
+    voto_utente = None
+    if request.user.is_authenticated:
+        v = Valutazione.objects.filter(utente=request.user, falesia=falesia).first()
+        voto_utente = v.voto if v else None
+
+    form_commento    = FormCommento()
+    form_valutazione = FormValutazione()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+
+        if 'invia_commento' in request.POST:
+            form_commento = FormCommento(request.POST)
+            if form_commento.is_valid():
+                c = form_commento.save(commit=False)
+                c.utente  = request.user
+                c.falesia = falesia
+                c.save()
+                messages.success(request, 'Commento pubblicato.')
+                return redirect('dettaglio_falesia', id=id)
+
+        elif 'invia_valutazione' in request.POST:
+            esistente = Valutazione.objects.filter(utente=request.user, falesia=falesia).first()
+            form_valutazione = FormValutazione(request.POST, instance=esistente)
+            if form_valutazione.is_valid():
+                v = form_valutazione.save(commit=False)
+                v.utente  = request.user
+                v.falesia = falesia
+                v.save()
+                messages.success(request, 'Valutazione salvata.')
+                return redirect('dettaglio_falesia', id=id)
+
     return render(request, 'generale/dettaglio_falesia.html', {
-        'falesia':  falesia,
-        'percorsi': percorsi,
-        'commenti': commenti,
+        'falesia':          falesia,
+        'percorsi':         percorsi,
+        'commenti':         commenti,
+        'media_voto':       media_voto,
+        'voto_utente':      voto_utente,
+        'form_commento':    form_commento,
+        'form_valutazione': form_valutazione,
     })
 
 
+# ── DETTAGLIO PERCORSO ────────────────────────────────────────────────────────
+
 def dettaglio_percorso(request, id):
     percorso = get_object_or_404(Percorso, id=id)
-    commenti = percorso.commento_set.all()
+    commenti = percorso.commento_set.select_related('utente__profilo').order_by('-data')
+
+    media_voto = Valutazione.objects.filter(percorso=percorso).aggregate(Avg('voto'))['voto__avg']
+
+    voto_utente = None
+    if request.user.is_authenticated:
+        v = Valutazione.objects.filter(utente=request.user, percorso=percorso).first()
+        voto_utente = v.voto if v else None
+
+    form_commento    = FormCommento()
+    form_valutazione = FormValutazione()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+
+        if 'invia_commento' in request.POST:
+            form_commento = FormCommento(request.POST)
+            if form_commento.is_valid():
+                c = form_commento.save(commit=False)
+                c.utente   = request.user
+                c.percorso = percorso
+                c.save()
+                messages.success(request, 'Commento pubblicato.')
+                return redirect('dettaglio_percorso', id=id)
+
+        elif 'invia_valutazione' in request.POST:
+            esistente = Valutazione.objects.filter(utente=request.user, percorso=percorso).first()
+            form_valutazione = FormValutazione(request.POST, instance=esistente)
+            if form_valutazione.is_valid():
+                v = form_valutazione.save(commit=False)
+                v.utente   = request.user
+                v.percorso = percorso
+                v.save()
+                messages.success(request, 'Valutazione salvata.')
+                return redirect('dettaglio_percorso', id=id)
+
     return render(request, 'generale/dettaglio_percorso.html', {
-        'percorso': percorso,
-        'commenti': commenti,
+        'percorso':         percorso,
+        'commenti':         commenti,
+        'media_voto':       media_voto,
+        'voto_utente':      voto_utente,
+        'form_commento':    form_commento,
+        'form_valutazione': form_valutazione,
+    })
+
+
+# ── ELIMINA COMMENTO ──────────────────────────────────────────────────────────
+
+@login_required
+def elimina_commento(request, id):
+    commento = get_object_or_404(Commento, id=id, utente=request.user)
+    if commento.falesia:
+        dest = redirect('dettaglio_falesia', id=commento.falesia.id)
+    else:
+        dest = redirect('dettaglio_percorso', id=commento.percorso.id)
+    commento.delete()
+    messages.success(request, 'Commento eliminato.')
+    return dest
+
+
+# ── AUTENTICAZIONE ────────────────────────────────────────────────────────────
+
+def vista_login(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return redirect(request.GET.get('next', 'home'))
+    else:
+        form = AuthenticationForm()
+    return render(request, 'generale/login.html', {'form': form})
+
+
+def vista_logout(request):
+    if request.method == 'POST':
+        logout(request)
+    return redirect('home')
+
+
+def vista_registrazione(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == 'POST':
+        form = FormRegistrazione(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Benvenuto, {user.username}!')
+            return redirect('home')
+    else:
+        form = FormRegistrazione()
+    return render(request, 'generale/registrazione.html', {'form': form})
+
+
+# ── PROFILO ───────────────────────────────────────────────────────────────────
+
+@login_required
+def vista_profilo(request):
+    profilo = request.user.profilo
+    if request.method == 'POST':
+        form_img = FormProfiloImmagine(request.POST, request.FILES, instance=profilo)
+        if form_img.is_valid():
+            form_img.save()
+            messages.success(request, 'Immagine profilo aggiornata.')
+            return redirect('profilo')
+    else:
+        form_img = FormProfiloImmagine(instance=profilo)
+
+    commenti_utente = Commento.objects.filter(utente=request.user).order_by('-data')
+    return render(request, 'generale/profilo.html', {
+        'form_img':        form_img,
+        'commenti_utente': commenti_utente,
     })

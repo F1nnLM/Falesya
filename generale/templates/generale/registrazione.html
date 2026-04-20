@@ -1,0 +1,32 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<div class="form-auth">
+    <h1>Registrati</h1>
+
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="messaggio messaggio-{{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="campo">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="aiuto">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                    <span class="errore">{{ field.errors|join:", " }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn-primario">Crea account</button>
+    </form>
+
+    <p class="link-auth">Hai già un account? <a href="{% url 'login' %}">Accedi</a></p>
+</div>
+{% endblock %}
