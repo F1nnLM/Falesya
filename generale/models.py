@@ -43,14 +43,13 @@ class Falesia(models.Model):
     
     nome = models.CharField(max_length=200)
     tipo_roccia = models.CharField(max_length=100, choices=ROCK_TYPE_CHOICES)
-    latitudine = models.DecimalField(max_digits=9, decimal_places=6)
-    longitudine = models.DecimalField(max_digits=9, decimal_places=6)
+    latitudine = models.DecimalField(max_digits=16, decimal_places=12)
+    longitudine = models.DecimalField(max_digits=16, decimal_places=12)
     comune = models.CharField(max_length=100)
     provincia = models.CharField(max_length=100)
     regione = models.CharField(max_length=100)
-    paese = models.CharField(max_length=100)
     descrizione = models.TextField()
-    esposizione = models.CharField(max_length=50, choices=ESPOSIZIONE)
+    esposizione = models.CharField(max_length=50, choices=ESPOSIZIONE,  null=True, blank=True) 
     stagione_consigliata = models.CharField(max_length=50, choices=STAGIONI)
     immagine = models.ImageField(upload_to='falesie/', blank=True)
 
