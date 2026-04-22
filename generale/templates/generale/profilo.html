@@ -7,11 +7,14 @@
     <div class="avatar-wrapper-grande">
         {% if user.profilo.immagine_profilo %}
             <img src="{{ user.profilo.immagine_profilo.url }}"
-                 alt="{{ user.username }}" class="avatar-grande">
+                 alt="{{ user.username }}" class="avatar-grande" id="avatar-profilo">
         {% else %}
-            <div class="avatar-grande avatar-placeholder-grande">
+            <div class="avatar-grande avatar-placeholder-grande" id="avatar-profilo-placeholder">
                 {{ user.username|first|upper }}
             </div>
+            <!-- img nascosta, usata per mostrare l'anteprima se l'utente sceglie una foto -->
+            <img src="" alt="{{ user.username }}" class="avatar-grande"
+                 id="avatar-profilo" style="display:none;">
         {% endif %}
     </div>
 
@@ -21,8 +24,19 @@
 
         <form method="POST" enctype="multipart/form-data" class="form-immagine">
             {% csrf_token %}
-            <label>Cambia immagine profilo</label>
-            {{ form_img.immagine_profilo }}
+            <!-- Input file nascosto — viene attivato dal label sotto tramitefor="id_immagine_profilo" -->
+            <input type="file"
+                   name="immagine_profilo"
+                   accept="image/*"
+                   id="id_immagine_profilo"
+                   class="input-file-nascosto"
+                   onchange="mostraNomeFile(this)">
+            <!-- Label cliccabile che fa da pulsante "Scegli foto" -->
+            <label for="id_immagine_profilo" class="btn-scegli-foto">
+                Scegli nuova foto
+            </label>
+            <!-- Mostra il nome del file scelto (aggiornato via JS) -->
+            <span class="nome-file-scelto" id="nome-file">Nessun file scelto</span>
             <button type="submit" class="btn-primario btn-small">Salva</button>
         </form>
     </div>
@@ -58,4 +72,7 @@
         <p>Non hai ancora lasciato commenti.</p>
     {% endfor %}
 </div>
+
+{% load static %}
+<script src="{% static 'generale/js/main.js' %}"></script>
 {% endblock %}

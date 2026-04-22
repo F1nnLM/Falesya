@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+a {
+    color: inherit;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f5f5f5;
@@ -589,10 +593,17 @@ footer {
 .stella:has(input:checked) { color: #e94560; font-weight: 700; }
 
 /* PROFILO */
-.avatar-wrapper-grande { flex-shrink: 0; }
-.avatar-grande {
-    width: 100px;
-    height: 100px;
+.avatar-wrapper-grande { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+img.avatar-grande {
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -608,4 +619,51 @@ footer {
     align-items: center;
     justify-content: center;
 }
-.form-immagine { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.form-immagine {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: 260px;
+}
+
+/* Nasconde l'input file nativo del browser mantenendolo
+   comunque attivabile tramite il label collegato */
+.input-file-nascosto {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    opacity: 0;
+}
+
+/* Il label collegato all'input diventa il pulsante visivo */
+.btn-scegli-foto {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-scegli-foto:hover {
+    background: #e8e8e8;
+    border-color: #e94560;
+    color: #e94560;
+}
+
+/* Nome del file scelto mostrato via JS */
+.nome-file-scelto {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
