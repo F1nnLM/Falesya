@@ -8,10 +8,8 @@
         <img src="{{ percorso.immagine.url }}" alt="{{ percorso.nome }}">
     {% endif %}
     <div class="dati">
-        <p><strong>Falesia:</strong> 
-            <a href="{% url 'dettaglio_falesia' percorso.falesia.id %}">
-                {{ percorso.falesia.nome }}
-            </a>
+        <p><strong>Falesia:</strong>
+            <a href="{% url 'dettaglio_falesia' percorso.falesia.id %}">{{ percorso.falesia.nome }}</a>
         </p>
         <p><strong>Grado:</strong> {{ percorso.grado }}</p>
         <p><strong>Tipo:</strong> {{ percorso.get_tipo_display }}</p>
@@ -19,8 +17,33 @@
         <p><strong>Numero soste:</strong> {{ percorso.n_soste }}</p>
         <p><strong>Numero spittature:</strong> {{ percorso.n_spittature }}</p>
         <p><strong>Distanza spit:</strong> {{ percorso.distanza_spit }} m</p>
+        <p>
+            <strong>Valutazione media:</strong>
+            {% if media_voto %}{{ media_voto|floatformat:1 }} / 5{% else %}Nessuna ancora{% endif %}
+        </p>
     </div>
 </div>
+
+<!-- VALUTAZIONE -->
+{% if user.is_authenticated %}
+<div class="box-valutazione">
+    <h2>{% if voto_utente %}La tua valutazione: {{ voto_utente }}/5{% else %}Valuta questo percorso{% endif %}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="stelle-radio">
+            {% for radio in form_valutazione.voto %}
+                <label class="stella">
+                    {{ radio.tag }}
+                    <span>{{ radio.choice_label }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit" name="invia_valutazione" class="btn-primario btn-small">
+            {% if voto_utente %}Aggiorna{% else %}Vota{% endif %}
+        </button>
+    </form>
+</div>
+{% endif %}
 
 <div class="descrizione">
     <h2>Descrizione</h2>
@@ -29,9 +52,46 @@
 
 <div class="commenti">
     <h2>Commenti</h2>
+
+    {% if user.is_authenticated %}
+    <form method="POST" class="form-commento">
+        {% csrf_token %}
+        {{ form_commento.testo }}
+        {% if form_commento.testo.errors %}
+            <span class="errore">{{ form_commento.testo.errors|join:", " }}</span>
+        {% endif %}
+        <button type="submit" name="invia_commento" class="btn-primario btn-small">Pubblica</button>
+    </form>
+    {% else %}
+    <p class="invito-login"><a href="{% url 'login' %}">Accedi</a> per lasciare un commento.</p>
+    {% endif %}
+
     {% for commento in commenti %}
         <div class="commento">
-            <strong>{{ commento.utente.username }}</strong> — {{ commento.data|date:"d/m/Y" }}
+            <div class="commento-header">
+                <div class="avatar-wrapper">
+                    {% if commento.utente.profilo.immagine_profilo %}
+                        <img src="{{ commento.utente.profilo.immagine_profilo.url }}"
+                             alt="{{ commento.utente.username }}" class="avatar">
+                    {% else %}
+                        <div class="avatar avatar-placeholder">
+                            {{ commento.utente.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <strong>{{ commento.utente.username }}</strong>
+                    <span class="data-commento">{{ commento.data|date:"d/m/Y" }}</span>
+                </div>
+                {% if user == commento.utente %}
+                <form method="POST" action="{% url 'elimina_commento' commento.id %}"
+                      class="form-elimina"
+                      onsubmit="return confirm('Eliminare questo commento?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-elimina">✕</button>
+                </form>
+                {% endif %}
+            </div>
             <p>{{ commento.testo }}</p>
         </div>
     {% empty %}

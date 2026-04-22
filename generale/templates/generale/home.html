@@ -1,17 +1,68 @@
 {% extends 'generale/base.html' %}
 
 {% block contenuto %}
-<section class="hero">
-    <div class="ricerca-box">
-        <h1>Trova la tua falesia</h1>
-        <form action="{% url 'risultati' %}" method="GET">
-            <input type="text" name="q" placeholder="Cerca per nome...">
-            <select name="tipo">
-                <option value="">Tutto</option>
-                <option value="falesia">Falesie</option>
-                <option value="percorso">Percorsi</option>
-            </select>
-            <button type="submit">Cerca</button>
+<section class="hero-filtri">
+    <h1 class="hero-titolo">Trova la tua falesia</h1>
+
+    <div class="filtri-box">
+        <form action="{% url 'risultati' %}" method="GET" id="form-ricerca">
+
+            <div class="filtro-gruppo">
+                <label for="q">NOME</label>
+                <input type="text" id="q" name="q" placeholder="Cerca falesia o percorso...">
+            </div>
+
+            <div class="filtro-riga">
+                <div class="filtro-gruppo">
+                    <label for="regione">REGIONE</label>
+                    <select id="regione" name="regione">
+                        <option value="">Tutte le regioni</option>
+                        {% for r in regioni %}
+                            <option value="{{ r }}">{{ r }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filtro-gruppo">
+                    <label for="tipo_percorso">TIPO</label>
+                    <select id="tipo_percorso" name="tipo_percorso">
+                        <option value="">Tutti i tipi</option>
+                        <option value="sport">Sportiva</option>
+                        <option value="boulder">Boulder</option>
+                        <option value="trad">Tradizionale</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filtro-gruppo">
+                <label>RANGE GRADO</label>
+                <div class="range-grado-box">
+                    <div class="range-valori">
+                        <span id="label-min">1</span>
+                        <span id="label-max">8c+</span>
+                    </div>
+                    <div class="range-track-wrapper">
+                        <div class="range-track">
+                            <div class="range-fill" id="range-fill"></div>
+                        </div>
+                        <input class="range-thumb" type="range" id="slider-min" min="0" max="27" value="0">
+                        <input class="range-thumb" type="range" id="slider-max" min="0" max="27" value="27">
+                    </div>
+                </div>
+                <input type="hidden" name="grado_min" id="grado_min">
+                <input type="hidden" name="grado_max" id="grado_max">
+            </div>
+
+            <div class="filtro-gruppo">
+                <label for="ordine">ORDINA PER</label>
+                <select id="ordine" name="ordine">
+                    <option value="nome">Nome</option>
+                    <option value="grado">Grado</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-cerca">Cerca</button>
+
         </form>
     </div>
 </section>
@@ -20,4 +71,33 @@
     <h2>Cos'è Falesya?</h2>
     <p>La guida digitale per gli arrampicatori. Trova falesie, consulta i percorsi e condividi le tue esperienze.</p>
 </section>
+
+<script>
+const GRADI = ['1','2','3','4a','4b','4c','5a','5b','5c','6a','6a+','6b','6b+','6c','6c+','7a','7a+','7b','7b+','7c','7c+','8a','8a+','8b','8b+','8c','8c+'];
+
+const sMin = document.getElementById('slider-min');
+const sMax = document.getElementById('slider-max');
+const lMin = document.getElementById('label-min');
+const lMax = document.getElementById('label-max');
+const fill = document.getElementById('range-fill');
+const iMin = document.getElementById('grado_min');
+const iMax = document.getElementById('grado_max');
+
+function aggiorna() {
+    let a = parseInt(sMin.value);
+    let b = parseInt(sMax.value);
+    if (a > b) { sMin.value = b; a = b; }
+    if (b < a) { sMax.value = a; b = a; }
+    lMin.textContent = GRADI[a];
+    lMax.textContent = GRADI[b];
+    fill.style.left  = (a / 27 * 100) + '%';
+    fill.style.width = ((b - a) / 27 * 100) + '%';
+    iMin.value = GRADI[a];
+    iMax.value = GRADI[b];
+}
+
+sMin.addEventListener('input', aggiorna);
+sMax.addEventListener('input', aggiorna);
+aggiorna();
+</script>
 {% endblock %}
