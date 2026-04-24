@@ -75,11 +75,55 @@ function togglePanel(id) {
     });
 
     if (target.style.display === 'none') {
+        // Se apre il panel immagine, salva l'src corrente dell'avatar
+        // SOLO se non è già stato salvato — così se l'utente apre/chiude
+        // più volte non sovrascriviamo con la base64 temporanea
+        if (id === 'panel-immagine' && target._srcOriginale === undefined) {
+            const img         = document.getElementById('avatar-profilo');
+            const placeholder = document.getElementById('avatar-profilo-placeholder');
+            target._srcOriginale        = img.src;
+            // getComputedStyle dà il valore reale calcolato ('block', 'none'...)
+            // invece di img.style.display che è vuoto se non impostato inline
+            target._imgDisplayOriginale = window.getComputedStyle(img).display;
+            target._phDisplayOriginale  = placeholder
+                ? window.getComputedStyle(placeholder).display
+                : null;
+        }
         target.style.display = 'block';
         target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
+        // Chiude il panel — se è quello immagine, ripristina l'avatar
+        if (id === 'panel-immagine') {
+            annullaImmagine(target);
+        }
         target.style.display = 'none';
     }
+}
+
+// Ripristina avatar e input file allo stato prima dell'apertura del panel
+function annullaImmagine(panel) {
+    const img         = document.getElementById('avatar-profilo');
+    const placeholder = document.getElementById('avatar-profilo-placeholder');
+    const fileInput   = document.getElementById('id_immagine_profilo');
+    const labelNome   = document.getElementById('nome-file');
+
+    // Ripristina src e visibilità dell'avatar
+    img.src           = panel._srcOriginale;
+    img.style.display = panel._imgDisplayOriginale;
+
+    if (placeholder && panel._phDisplayOriginale !== null) {
+        placeholder.style.display = panel._phDisplayOriginale;
+    }
+
+    // Resetta l'input file
+    if (fileInput) fileInput.value = '';
+    if (labelNome) labelNome.textContent = 'Nessun file scelto';
+
+    // Cancella i valori salvati così la prossima apertura
+    // risalva lo stato aggiornato (es. dopo un salvataggio riuscito)
+    panel._srcOriginale        = undefined;
+    panel._imgDisplayOriginale = undefined;
+    panel._phDisplayOriginale  = undefined;
 }
 
 
