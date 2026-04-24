@@ -619,28 +619,261 @@ img.avatar-grande {
     align-items: center;
     justify-content: center;
 }
-.form-immagine {
-    margin-top: 1.2rem;
+/* .form-immagine non più usata — sostituita dai panel */
+
+/* ── LOGOUT NAV ──────────────────────────────────────────────────────────── */
+.btn-logout {
+    background: none;
+    border: 1px solid #e94560;
+    color: #e94560;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.btn-logout:hover { background-color: #e94560; color: white; }
+
+/* ── MESSAGGI FLASH ──────────────────────────────────────────────────────── */
+.messaggi-flash {
+    max-width: 1100px;
+    margin: 1rem auto 0;
+    padding: 0 1.5rem;
+}
+.messaggio {
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+.messaggio-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+.messaggio-error   { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+.messaggio-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
+
+/* ── FORM AUTH ───────────────────────────────────────────────────────────── */
+.form-auth {
+    max-width: 420px;
+    margin: 3rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+.form-auth h1 { margin-bottom: 1.5rem; text-align: center; }
+.campo { margin-bottom: 1.2rem; }
+.campo label { display: block; font-weight: 600; margin-bottom: 0.3rem; color: #1a1a2e; }
+.campo input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+.campo input:focus { outline: none; border-color: #e94560; }
+.errore { color: #dc3545; font-size: 0.85rem; display: block; margin-top: 0.2rem; }
+.aiuto  { color: #888; font-size: 0.8rem; display: block; margin-top: 0.2rem; }
+.link-auth { text-align: center; margin-top: 1rem; color: #666; }
+.link-auth a { color: #e94560; font-weight: 600; }
+
+/* ── PULSANTI ─────────────────────────────────────────────────────────────── */
+.btn-primario {
+    background-color: #e94560;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+.btn-primario:hover { background-color: #c73652; }
+.btn-primario.btn-small { width: auto; padding: 0.4rem 1rem; font-size: 0.9rem; }
+
+.btn-annulla {
+    background: none;
+    border: 1px solid #ccc;
+    color: #666;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-annulla:hover { border-color: #999; color: #333; }
+
+/* ── AVATAR NEI COMMENTI ─────────────────────────────────────────────────── */
+.commento-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+.avatar-wrapper { flex-shrink: 0; }
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar-placeholder {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #e94560;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.data-commento { color: #999; font-size: 0.85rem; margin-left: 0.4rem; }
+
+/* ── ELIMINA COMMENTO ────────────────────────────────────────────────────── */
+.form-elimina { margin-left: auto; }
+.btn-elimina {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+}
+.btn-elimina:hover { color: #e94560; }
+
+/* ── FORM COMMENTO ───────────────────────────────────────────────────────── */
+.form-commento { margin-bottom: 1.5rem; }
+.form-commento textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+}
+.form-commento textarea:focus { outline: none; border-color: #e94560; }
+.invito-login { color: #666; margin-bottom: 1rem; }
+.invito-login a { color: #e94560; font-weight: 600; }
+
+/* ── VALUTAZIONE ─────────────────────────────────────────────────────────── */
+.box-valutazione {
+    background: white;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+.stelle-radio { display: flex; gap: 1rem; margin: 0.8rem 0; }
+.stella {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    max-width: 260px;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #555;
 }
+.stella input[type="radio"]:checked + span,
+.stella:has(input:checked) { color: #e94560; font-weight: 700; }
 
-/* Nasconde l'input file nativo del browser mantenendolo
-   comunque attivabile tramite il label collegato */
-.input-file-nascosto {
-    width: 0;
-    height: 0;
-    overflow: hidden;
+/* ── PROFILO — riga dato con matita ──────────────────────────────────────── */
+.riga-dato {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.riga-dato p { flex: 1; font-size: 0.95rem; margin: 0; }
+
+.matita {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+.matita:hover { color: #e94560; }
+
+.avatar-wrapper-grande {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+.matita-avatar {
     position: absolute;
-    opacity: 0;
+    bottom: 6px;
+    right: 6px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: border-color 0.15s, color 0.15s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
+.matita-avatar:hover { border-color: #e94560; color: #e94560; }
 
-/* Il label collegato all'input diventa il pulsante visivo */
+/* ── PANEL MODIFICA ──────────────────────────────────────────────────────── */
+.panel-modifica {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 4px solid #e94560;
+}
+.panel-modifica h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 1rem;
+}
+.form-panel { display: flex; flex-direction: column; gap: 0.8rem; }
+.campo-panel { display: flex; flex-direction: column; gap: 0.3rem; }
+.campo-panel label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.campo-panel input {
+    padding: 0.6rem 0.8rem;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.campo-panel input:focus { outline: none; border-color: #e94560; }
+.riga-bottoni { display: flex; gap: 0.8rem; margin-top: 0.4rem; align-items: center; }
+
+/* Input file nascosto + pulsante scegli foto */
+.input-file-nascosto {
+    width: 0; height: 0; overflow: hidden;
+    position: absolute; opacity: 0;
+}
+.riga-input-file { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
 .btn-scegli-foto {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.9rem;
     background: #f0f0f0;
     border: 1.5px solid #ddd;
     border-radius: 6px;
@@ -648,22 +881,110 @@ img.avatar-grande {
     font-weight: 600;
     color: #333;
     cursor: pointer;
-    text-align: center;
+    white-space: nowrap;
     transition: background 0.15s, border-color 0.15s;
 }
-
-.btn-scegli-foto:hover {
-    background: #e8e8e8;
-    border-color: #e94560;
-    color: #e94560;
-}
-
-/* Nome del file scelto mostrato via JS */
+.btn-scegli-foto:hover { background: #e8e8e8; border-color: #e94560; color: #e94560; }
 .nome-file-scelto {
     font-size: 0.85rem;
     color: #888;
     font-style: italic;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+/* ── CAMPI INLINE EDITABILI ──────────────────────────────────────────────── */
+
+/* Riga per i campi con modifica inline (username, email) */
+.riga-dato-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+
+/* Riga statica (password) */
+.riga-dato {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.etichetta-campo {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 70px;
+    flex-shrink: 0;
+}
+
+.valore-campo {
+    flex: 1;
+    font-size: 0.95rem;
+    color: #222;
+}
+
+/* Input che di default sembra testo normale —
+   nessun bordo, nessuno sfondo, stessa font del body.
+   readonly lo rende non editabile ma visivamente pulito. */
+.input-inline {
+    flex: 1;
+    border: none;
+    border-bottom: 1.5px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #222;
+    padding: 0.1rem 0.2rem;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+}
+
+/* Quando l'input è attivo (readonly rimosso via JS) */
+.input-inline-attivo {
+    border-bottom-color: #e94560;
+    background: #fff8f9;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Contenitore ✓ / ✕ — flex row, nascosto di default */
+.riga-azioni {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.btn-conferma {
+    background: none;
+    border: none;
+    color: #28a745;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.btn-conferma:hover { color: #1e7e34; }
+
+.btn-annulla-inline {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.btn-annulla-inline:hover { color: #e94560; }

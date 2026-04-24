@@ -1,9 +1,12 @@
 {% extends 'generale/base.html' %}
+{% load static %}
 
 {% block contenuto %}
 <h1>Profilo di {{ user.username }}</h1>
 
 <div class="dettaglio-header">
+
+    <!-- ── AVATAR con matita ──────────────────────────────────────── -->
     <div class="avatar-wrapper-grande">
         {% if user.profilo.immagine_profilo %}
             <img src="{{ user.profilo.immagine_profilo.url }}"
@@ -12,36 +15,116 @@
             <div class="avatar-grande avatar-placeholder-grande" id="avatar-profilo-placeholder">
                 {{ user.username|first|upper }}
             </div>
-            <!-- img nascosta, usata per mostrare l'anteprima se l'utente sceglie una foto -->
             <img src="" alt="{{ user.username }}" class="avatar-grande"
                  id="avatar-profilo" style="display:none;">
         {% endif %}
+        <button type="button" class="matita-avatar" onclick="togglePanel('panel-immagine')"
+                title="Cambia foto profilo">✎</button>
     </div>
 
+    <!-- ── DATI UTENTE — ogni campo è un form autonomo ───────────── -->
     <div class="dati">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
 
-        <form method="POST" enctype="multipart/form-data" class="form-immagine">
+        <!-- USERNAME -->
+        <form method="POST" class="riga-dato-form" id="form-username">
             {% csrf_token %}
-            <!-- Input file nascosto — viene attivato dal label sotto tramitefor="id_immagine_profilo" -->
-            <input type="file"
-                   name="immagine_profilo"
-                   accept="image/*"
-                   id="id_immagine_profilo"
-                   class="input-file-nascosto"
-                   onchange="mostraNomeFile(this)">
-            <!-- Label cliccabile che fa da pulsante "Scegli foto" -->
-            <label for="id_immagine_profilo" class="btn-scegli-foto">
-                Scegli nuova foto
-            </label>
-            <!-- Mostra il nome del file scelto (aggiornato via JS) -->
-            <span class="nome-file-scelto" id="nome-file">Nessun file scelto</span>
-            <button type="submit" class="btn-primario btn-small">Salva</button>
+            <label class="etichetta-campo">Username</label>
+            <input type="text"
+                   name="username"
+                   value="{{ user.username }}"
+                   id="input-username"
+                   class="input-inline"
+                   readonly>
+            <div class="riga-azioni" id="azioni-username" style="display:none;">
+                <button type="submit" name="salva_username" class="btn-conferma" title="Conferma">✓</button>
+                <button type="button" class="btn-annulla-inline" onclick="annullaModifica('username')" title="Annulla">✕</button>
+            </div>
+            <button type="button" class="matita" id="matita-username"
+                    onclick="abilitaModifica('username')" title="Modifica">✎</button>
+            {% if form_dati.username.errors %}
+                <span class="errore">{{ form_dati.username.errors|join:", " }}</span>
+            {% endif %}
         </form>
+
+        <!-- EMAIL -->
+        <form method="POST" class="riga-dato-form" id="form-email">
+            {% csrf_token %}
+            <label class="etichetta-campo">Email</label>
+            <input type="email"
+                   name="email"
+                   value="{{ user.email }}"
+                   id="input-email"
+                   class="input-inline"
+                   readonly>
+            <div class="riga-azioni" id="azioni-email" style="display:none;">
+                <button type="submit" name="salva_email" class="btn-conferma" title="Conferma">✓</button>
+                <button type="button" class="btn-annulla-inline" onclick="annullaModifica('email')" title="Annulla">✕</button>
+            </div>
+            <button type="button" class="matita" id="matita-email"
+                    onclick="abilitaModifica('email')" title="Modifica">✎</button>
+            {% if form_dati.email.errors %}
+                <span class="errore">{{ form_dati.email.errors|join:", " }}</span>
+            {% endif %}
+        </form>
+
+        <!-- PASSWORD — qui si apre il panel perché ha 3 campi -->
+        <div class="riga-dato">
+            <label class="etichetta-campo">Password</label>
+            <span class="valore-campo">••••••••</span>
+            <button type="button" class="matita" onclick="togglePanel('panel-password')"
+                    title="Cambia password">✎</button>
+        </div>
+
     </div>
 </div>
 
+<!-- ── PANEL: modifica immagine ───────────────────────────────────────── -->
+<div class="panel-modifica" id="panel-immagine" style="display:none;">
+    <h3>Cambia foto profilo</h3>
+    <form method="POST" enctype="multipart/form-data" class="form-panel">
+        {% csrf_token %}
+        <input type="file"
+               name="immagine_profilo"
+               accept="image/*"
+               id="id_immagine_profilo"
+               class="input-file-nascosto"
+               onchange="mostraNomeFile(this)">
+        <div class="riga-input-file">
+            <label for="id_immagine_profilo" class="btn-scegli-foto">Scegli foto</label>
+            <span class="nome-file-scelto" id="nome-file">Nessun file scelto</span>
+        </div>
+        <div class="riga-bottoni">
+            <button type="submit" name="salva_immagine" class="btn-primario btn-small">Salva</button>
+            <button type="button" class="btn-annulla" onclick="togglePanel('panel-immagine')">Annulla</button>
+        </div>
+    </form>
+</div>
+
+<!-- ── PANEL: cambia password ─────────────────────────────────────────── -->
+<div class="panel-modifica" id="panel-password" style="display:none;">
+    <h3>Cambia password</h3>
+    <form method="POST" class="form-panel">
+        {% csrf_token %}
+        {% for field in form_password %}
+            <div class="campo-panel">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="errore">{{ field.errors|join:", " }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if form_password.non_field_errors %}
+            <span class="errore">{{ form_password.non_field_errors|join:", " }}</span>
+        {% endif %}
+        <div class="riga-bottoni">
+            <button type="submit" name="salva_password" class="btn-primario btn-small">Salva</button>
+            <button type="button" class="btn-annulla" onclick="togglePanel('panel-password')">Annulla</button>
+        </div>
+    </form>
+</div>
+
+<!-- ── COMMENTI ───────────────────────────────────────────────────────── -->
 <div class="commenti">
     <h2>I tuoi commenti</h2>
     {% for commento in commenti_utente %}
@@ -49,13 +132,9 @@
             <div class="commento-header">
                 <div>
                     {% if commento.falesia %}
-                        <a href="{% url 'dettaglio_falesia' commento.falesia.id %}">
-                            {{ commento.falesia.nome }}
-                        </a>
+                        <a href="{% url 'dettaglio_falesia' commento.falesia.id %}">{{ commento.falesia.nome }}</a>
                     {% elif commento.percorso %}
-                        <a href="{% url 'dettaglio_percorso' commento.percorso.id %}">
-                            {{ commento.percorso.nome }}
-                        </a>
+                        <a href="{% url 'dettaglio_percorso' commento.percorso.id %}">{{ commento.percorso.nome }}</a>
                     {% endif %}
                     <span class="data-commento">{{ commento.data|date:"d/m/Y" }}</span>
                 </div>
@@ -73,6 +152,5 @@
     {% endfor %}
 </div>
 
-{% load static %}
-<script src="{% static 'generale/js/main.js' %}"></script>
+<script src="{% static 'generale/js/main.js' %}?v=2"></script>
 {% endblock %}
