@@ -5,8 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.db.models import Avg
 
+from django.contrib.auth.models import User
 from .models import Falesia, Percorso, Commento, Valutazione
-from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine
+from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine, FormDatiUtente, FormCambioPassword
 
 # ── COSTANTI ──────────────────────────────────────────────────────────────────
 
@@ -247,17 +248,58 @@ def vista_registrazione(request):
 @login_required
 def vista_profilo(request):
     profilo = request.user.profilo
+
+    # Inizializziamo tutti e tre i form vuoti (per il GET)
+    form_img      = FormProfiloImmagine(instance=profilo)
+    form_dati     = FormDatiUtente(instance=request.user)
+    form_password = FormCambioPassword(user=request.user)
+
     if request.method == 'POST':
-        form_img = FormProfiloImmagine(request.POST, request.FILES, instance=profilo)
-        if form_img.is_valid():
-            form_img.save()
-            messages.success(request, 'Immagine profilo aggiornata.')
+
+        # Il campo 'azione' nell'HTML ci dice quale form è stato inviato,
+        # così possiamo gestirli separatamente nella stessa view.
+
+        if 'salva_immagine' in request.POST:
+            form_img = FormProfiloImmagine(request.POST, request.FILES, instance=profilo)
+            if form_img.is_valid():
+                form_img.save()
+                messages.success(request, 'Immagine profilo aggiornata.')
+                return redirect('profilo')
+
+        elif 'salva_username' in request.POST:
+            nuovo_username = request.POST.get('username', '').strip()
+            if nuovo_username:
+                if User.objects.filter(username=nuovo_username).exclude(pk=request.user.pk).exists():
+                    messages.error(request, 'Username già in uso.')
+                else:
+                    request.user.username = nuovo_username
+                    request.user.save()
+                    messages.success(request, 'Username aggiornato.')
             return redirect('profilo')
-    else:
-        form_img = FormProfiloImmagine(instance=profilo)
+
+        elif 'salva_email' in request.POST:
+            nuova_email = request.POST.get('email', '').strip()
+            if nuova_email:
+                request.user.email = nuova_email
+                request.user.save()
+                messages.success(request, 'Email aggiornata.')
+            return redirect('profilo')
+
+        elif 'salva_password' in request.POST:
+            form_password = FormCambioPassword(user=request.user, data=request.POST)
+            if form_password.is_valid():
+                form_password.salva()
+                # Dopo aver cambiato la password Django invalida la sessione,
+                # quindi bisogna ri-autenticare l'utente per non farlo sloggare.
+                from django.contrib.auth import update_session_auth_hash
+                update_session_auth_hash(request, request.user)
+                messages.success(request, 'Password aggiornata.')
+                return redirect('profilo')
 
     commenti_utente = Commento.objects.filter(utente=request.user).order_by('-data')
     return render(request, 'generale/profilo.html', {
         'form_img':        form_img,
+        'form_dati':       form_dati,
+        'form_password':   form_password,
         'commenti_utente': commenti_utente,
     })
