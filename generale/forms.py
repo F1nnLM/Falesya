@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from .models import Commento, Valutazione, Profilo
 
 
-# ── AUTENTICAZIONE ────────────────────────────────────────────────────────────
+#autenticazione
+
 
 class FormRegistrazione(UserCreationForm):
     """
@@ -22,25 +23,25 @@ class FormRegistrazione(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
-            # Il signal post_save in models.py crea automaticamente il Profilo
+            #Il signal post_save in models.py crea automaticamente il Profilo
         return user
 
 
-# ── PROFILO ───────────────────────────────────────────────────────────────────
+#profilo
 
 class FormProfiloImmagine(forms.ModelForm):
-    """Form per aggiornare solo l'immagine del profilo."""
+    """Form per aggiornare solo l'immagine del profilo"""
     class Meta:
         model = Profilo
         fields = ['immagine_profilo']
 
 
-# ── MODIFICA DATI UTENTE ─────────────────────────────────────────────────────
+#modifica dati utente
 
 class FormDatiUtente(forms.ModelForm):
     """
     Permette di modificare username ed email dell'utente.
-    Usa il modello User direttamente — nessun campo extra necessario.
+    Usa il modello User direttamente — nessun campo extra necessario
     """
     class Meta:
         model = User
@@ -63,14 +64,14 @@ class FormCambioPassword(forms.Form):
     conferma_password = forms.CharField(widget=forms.PasswordInput, label='Conferma nuova password')
 
     def __init__(self, user, *args, **kwargs):
-        # Riceviamo l'utente per poter verificare la password attuale
+        #Riceviamo l'utente per poter verificare la password attuale
         self.user = user
         super().__init__(*args, **kwargs)
 
     def clean(self):
         """
         clean() viene chiamato da is_valid() dopo che i singoli campi
-        sono stati validati. Qui facciamo le validazioni che coinvolgono
+        sono stati validati. validazioni che coinvolgono
         più campi contemporaneamente.
         """
         cleaned = super().clean()
@@ -78,11 +79,11 @@ class FormCambioPassword(forms.Form):
         nuova     = cleaned.get('nuova_password')
         conferma  = cleaned.get('conferma_password')
 
-        # Verifica che la password attuale sia corretta
+        #Verifica che la password attuale sia corretta
         if attuale and not self.user.check_password(attuale):
             raise forms.ValidationError({'password_attuale': 'Password attuale non corretta.'})
 
-        # Verifica che nuova e conferma coincidano
+        #Verifica che nuova e conferma coincidano
         if nuova and conferma and nuova != conferma:
             raise forms.ValidationError({'conferma_password': 'Le password non coincidono.'})
 
@@ -94,7 +95,7 @@ class FormCambioPassword(forms.Form):
         self.user.save()
 
 
-# ── COMMENTO ──────────────────────────────────────────────────────────────────
+#commento
 
 class FormCommento(forms.ModelForm):
     """
@@ -115,7 +116,7 @@ class FormCommento(forms.ModelForm):
         labels = {'testo': ''}
 
 
-# ── VALUTAZIONE ───────────────────────────────────────────────────────────────
+#valutazione
 
 class FormValutazione(forms.ModelForm):
     """
@@ -129,3 +130,4 @@ class FormValutazione(forms.ModelForm):
             'voto': forms.RadioSelect()
         }
         labels = {'voto': 'La tua valutazione'}
+
