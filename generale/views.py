@@ -218,7 +218,7 @@ def vista_login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect(request.GET.get('next', 'home'))
+            return redirect(request.GET.get('next', 'profilo'))
     else:
         form = AuthenticationForm()
     return render(request, 'generale/login.html', {'form': form})
@@ -239,7 +239,7 @@ def vista_registrazione(request):
             user = form.save()
             login(request, user)
             messages.success(request, f'Benvenuto, {user.username}!')
-            return redirect('home')
+            return redirect('profilo')
     else:
         form = FormRegistrazione()
     return render(request, 'generale/registrazione.html', {'form': form})
