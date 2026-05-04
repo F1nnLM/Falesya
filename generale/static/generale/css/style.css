@@ -221,6 +221,33 @@ h2 {
     color: #1a1a2e;
 }
 
+/* STELLE VALUTAZIONE */
+.stelle-media {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+ 
+.stella-media-icona {
+    display: block;
+}
+ 
+.stella-piena-statica {
+    color: #f5a623;   /* giallo, stessa tinta delle stelle interattive */
+}
+ 
+.stella-vuota-statica {
+    color: #ccc;      /* grigio */
+}
+ 
+.media-numero {
+    font-size: 0.85rem;
+    color: #888;
+    margin-left: 4px;
+}
+
 /* DESCRIZIONE */
 .descrizione {
     background: white;
@@ -568,29 +595,76 @@ footer {
 .invito-login a { color: #e94560; font-weight: 600; }
 
 /* VALUTAZIONE */
+
+ 
+/*
+    Il container delle stelle: flexbox orizzontale, gap tra le icone,
+    rimosso il box e l'h2 precedente — ora le stelle stanno da sole
+    dentro .box-valutazione.
+*/
+.stelle-valutazione {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+ 
+/*
+    Ogni label è cliccabile e mostra il cursore a mano.
+    position: relative serve per sovrapporre le due icone SVG.
+*/
+.stella-label {
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    line-height: 1;
+}
+ 
+/*
+    Entrambe le icone SVG (vuota e piena) sono sovrapposte.
+    .stella-vuota è visibile di default (colore grigio chiaro).
+    .stella-piena è nascosta di default.
+*/
+.stella-icona {
+    display: block;
+    transition: opacity 0.1s ease;
+}
+ 
+.stella-vuota {
+    color: #ccc;      /* grigio */
+    opacity: 1;
+}
+ 
+.stella-piena {
+    color: #f5a623;   /* giallo/arancio stella */
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+ 
+/*
+    Quando la label ha la classe .stella-attiva (aggiunta via JS):
+    nascondi la stella vuota, mostra la piena.
+*/
+.stella-label.stella-attiva .stella-vuota {
+    opacity: 0;
+}
+ 
+.stella-label.stella-attiva .stella-piena {
+    opacity: 1;
+}
+ 
+/* Il box valutazione: sfondo bianco, bordo arrotondato, padding */
 .box-valutazione {
     background: white;
     padding: 1.2rem 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-bottom: 1.5rem;
+    display: inline-block;  /* si restringe al contenuto, no larghezza piena */
+    text-align: center;
 }
-.stelle-radio {
-    display: flex;
-    gap: 1rem;
-    margin: 0.8rem 0;
-}
-.stella {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #555;
-}
-.stella input[type="radio"]:checked + span,
-.stella:has(input:checked) { color: #e94560; font-weight: 700; }
 
 /* PROFILO */
 .avatar-wrapper-grande { 
