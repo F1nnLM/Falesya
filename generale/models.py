@@ -19,8 +19,7 @@ def crea_o_aggiorna_profilo(sender, instance, created, **kwargs):
     if created:
         Profilo.objects.create(utente=instance)
     else:
-        # get_or_create gestisce il caso in cui il profilo
-        # non esista ancora (es. utenti creati prima di questa migrazione)
+
         Profilo.objects.get_or_create(utente=instance)
  
 

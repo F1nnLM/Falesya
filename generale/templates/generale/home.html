@@ -45,8 +45,8 @@
                         <div class="range-track">
                             <div class="range-fill" id="range-fill"></div>
                         </div>
-                        <input class="range-thumb" type="range" id="slider-min" min="0" max="27" value="0">
-                        <input class="range-thumb" type="range" id="slider-max" min="0" max="27" value="27">
+                        <input class="range-thumb" type="range" id="slider-min" min="0" max="26" value="0">
+                        <input class="range-thumb" type="range" id="slider-max" min="0" max="26" value="26">
                     </div>
                 </div>
                 <input type="hidden" name="grado_min" id="grado_min">
@@ -90,8 +90,8 @@ function aggiorna() {
     if (b < a) { sMax.value = a; b = a; }
     lMin.textContent = GRADI[a];
     lMax.textContent = GRADI[b];
-    fill.style.left  = (a / 27 * 100) + '%';
-    fill.style.width = ((b - a) / 27 * 100) + '%';
+    fill.style.left  = (a / 26 * 100) + '%';
+    fill.style.width = ((b - a) / 26 * 100) + '%';
     iMin.value = GRADI[a];
     iMax.value = GRADI[b];
 }

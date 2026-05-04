@@ -138,6 +138,7 @@ def dettaglio_falesia(request, id):
         'percorsi':         percorsi,
         'commenti':         commenti,
         'media_voto':       media_voto,
+        'media_voto_int':   round(media_voto) if media_voto else 0,
         'voto_utente':      voto_utente,
         'form_commento':    form_commento,
         'form_valutazione': form_valutazione,
@@ -187,6 +188,7 @@ def dettaglio_percorso(request, id):
         'percorso':         percorso,
         'commenti':         commenti,
         'media_voto':       media_voto,
+        'media_voto_int':   round(media_voto) if media_voto else 0,
         'voto_utente':      voto_utente,
         'form_commento':    form_commento,
         'form_valutazione': form_valutazione,
@@ -216,7 +218,7 @@ def vista_login(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect(request.GET.get('next', 'home'))
+            return redirect(request.GET.get('next', 'profilo'))
     else:
         form = AuthenticationForm()
     return render(request, 'generale/login.html', {'form': form})
@@ -237,7 +239,7 @@ def vista_registrazione(request):
             user = form.save()
             login(request, user)
             messages.success(request, f'Benvenuto, {user.username}!')
-            return redirect('home')
+            return redirect('profilo')
     else:
         form = FormRegistrazione()
     return render(request, 'generale/registrazione.html', {'form': form})
