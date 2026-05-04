@@ -4,9 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.db.models import Avg
+from django.views.decorators.http import require_POST
 
 from django.contrib.auth.models import User
-from .models import Falesia, Percorso, Commento, Valutazione
+from .models import Falesia, Percorso, Commento, Valutazione, Preferito
 from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine, FormDatiUtente, FormCambioPassword
 
 # ── COSTANTI ──────────────────────────────────────────────────────────────────
@@ -101,6 +102,10 @@ def dettaglio_falesia(request, id):
     commenti = falesia.commento_set.select_related('utente__profilo').order_by('-data')
 
     media_voto = Valutazione.objects.filter(falesia=falesia).aggregate(Avg('voto'))['voto__avg']
+    is_preferito = (
+        request.user.is_authenticated and
+        Preferito.objects.filter(utente=request.user, falesia=falesia).exists()
+    )
 
     voto_utente = None
     if request.user.is_authenticated:
@@ -142,6 +147,7 @@ def dettaglio_falesia(request, id):
         'voto_utente':      voto_utente,
         'form_commento':    form_commento,
         'form_valutazione': form_valutazione,
+        'is_preferito':     is_preferito,
     })
 
 
@@ -152,7 +158,10 @@ def dettaglio_percorso(request, id):
     commenti = percorso.commento_set.select_related('utente__profilo').order_by('-data')
 
     media_voto = Valutazione.objects.filter(percorso=percorso).aggregate(Avg('voto'))['voto__avg']
-
+    is_preferito = (
+        request.user.is_authenticated and
+        Preferito.objects.filter(utente=request.user, percorso=percorso).exists()
+    )
     voto_utente = None
     if request.user.is_authenticated:
         v = Valutazione.objects.filter(utente=request.user, percorso=percorso).first()
@@ -183,6 +192,9 @@ def dettaglio_percorso(request, id):
                 v.save()
                 messages.success(request, 'Valutazione salvata.')
                 return redirect('dettaglio_percorso', id=id)
+            
+
+
 
     return render(request, 'generale/dettaglio_percorso.html', {
         'percorso':         percorso,
@@ -192,8 +204,37 @@ def dettaglio_percorso(request, id):
         'voto_utente':      voto_utente,
         'form_commento':    form_commento,
         'form_valutazione': form_valutazione,
+        'is_preferito':     is_preferito,
     })
 
+#PREFERITO
+@login_required
+@require_POST
+def toggle_preferito(request):
+    tipo = request.POST.get('tipo')       # 'falesia' o 'percorso'
+    oggetto_id = request.POST.get('id')   # id numerico dell'oggetto
+
+    if tipo == 'falesia':
+        falesia = get_object_or_404(Falesia, id=oggetto_id)
+        preferito, created = Preferito.objects.get_or_create(
+            utente=request.user,
+            falesia=falesia,
+        )
+        if not created:
+            # Esisteva già → rimuovi
+            preferito.delete()
+
+    elif tipo == 'percorso':
+        percorso = get_object_or_404(Percorso, id=oggetto_id)
+        preferito, created = Preferito.objects.get_or_create(
+            utente=request.user,
+            percorso=percorso,
+        )
+        if not created:
+            preferito.delete()
+
+    # Torna alla pagina precedente (la falesia o il percorso)
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 # ── ELIMINA COMMENTO ──────────────────────────────────────────────────────────
 
@@ -299,9 +340,20 @@ def vista_profilo(request):
                 return redirect('profilo')
 
     commenti_utente = Commento.objects.filter(utente=request.user).order_by('-data')
+    falesie_preferite = Preferito.objects.filter(
+        utente=request.user,
+        falesia__isnull=False,
+    ).select_related('falesia')
+    percorsi_preferiti = Preferito.objects.filter(
+        utente=request.user,
+        percorso__isnull=False,
+    ).select_related('percorso')
+
     return render(request, 'generale/profilo.html', {
-        'form_img':        form_img,
-        'form_dati':       form_dati,
-        'form_password':   form_password,
-        'commenti_utente': commenti_utente,
+        'form_img':          form_img,
+        'form_dati':         form_dati,
+        'form_password':     form_password,
+        'commenti_utente':   commenti_utente,
+        'falesie_preferite': falesie_preferite,
+        'percorsi_preferiti': percorsi_preferiti,
     })

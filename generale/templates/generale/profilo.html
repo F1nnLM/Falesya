@@ -124,6 +124,57 @@
     </form>
 </div>
 
+<!-- ── PREFERITI ───────────────────────────────────────────────────────── -->
+<div class="sezione-preferiti">
+    <h2>I tuoi preferiti</h2>
+    <div class="preferiti-liste">
+        <div class="preferiti-colonna">
+            <h3>Falesie</h3>
+            {% if falesie_preferite %}
+            <ul class="lista-preferiti">
+                {% for preferito in falesie_preferite %}
+                <li>
+                    <div class="lista-preferiti-item">
+                        <a href="{% url 'dettaglio_falesia' preferito.falesia.id %}">{{ preferito.falesia.nome }}</a>
+                        <form method="POST" action="{% url 'toggle_preferito' %}" class="form-elimina">
+                            {% csrf_token %}
+                            <input type="hidden" name="tipo" value="falesia">
+                            <input type="hidden" name="id" value="{{ preferito.falesia.id }}">
+                            <button type="submit" class="btn-elimina" title="Rimuovi dai preferiti">✕</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Nessuna falesia nei preferiti.</p>
+            {% endif %}
+        </div>
+        <div class="preferiti-colonna">
+            <h3>Percorsi</h3>
+            {% if percorsi_preferiti %}
+            <ul class="lista-preferiti">
+                {% for preferito in percorsi_preferiti %}
+                <li>
+                    <div class="lista-preferiti-item">
+                        <a href="{% url 'dettaglio_percorso' preferito.percorso.id %}">{{ preferito.percorso.nome }}</a>
+                        <form method="POST" action="{% url 'toggle_preferito' %}" class="form-elimina">
+                            {% csrf_token %}
+                            <input type="hidden" name="tipo" value="percorso">
+                            <input type="hidden" name="id" value="{{ preferito.percorso.id }}">
+                            <button type="submit" class="btn-elimina" title="Rimuovi dai preferiti">✕</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Nessun percorso nei preferiti.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 <!-- ── COMMENTI ───────────────────────────────────────────────────────── -->
 <div class="commenti">
     <h2>I tuoi commenti</h2>
