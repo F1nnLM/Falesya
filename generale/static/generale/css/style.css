@@ -326,6 +326,7 @@ footer {
     width: 100%;
     max-width: 480px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    overflow: visible;
 }
 
 /* ogni riga label + campo */
@@ -374,9 +375,16 @@ footer {
     user-select: none;
 }
 
+/* SLIDER RANGE GRADO */
+.range-grado-box {
+    user-select: none;
+    overflow: visible;
+}
+
 .range-valori {
     display: flex;
     justify-content: space-between;
+    width: 100%;
     font-size: 1.05rem;
     font-weight: 700;
     color: #1a1a2e;
