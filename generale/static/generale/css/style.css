@@ -1177,3 +1177,60 @@ img.avatar-grande {
     transition: color 0.15s;
 }
 .btn-annulla-inline:hover { color: #e94560; }
+
+/* MAPPA */
+#mappa-container {
+    display: flex;
+    gap: 1.5rem;
+    height: 600px;
+}
+
+#mappa {
+    flex: 2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#lista-falesie {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow-y: auto;
+}
+
+#lista-falesie h2 {
+    margin-top: 0;
+    border-left: 4px solid #e94560;
+    padding-left: 0.8rem;
+}
+
+#stato-gps {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 0.8rem;
+}
+
+#lista li {
+    list-style: none;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+
+#lista li:hover {
+    color: #e94560;
+}
+
+#lista li .distanza {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: block;
+}
+
+#lista li strong {
+    display: block;
+    color: #1a1a2e;
+}

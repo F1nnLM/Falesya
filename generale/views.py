@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from .models import Falesia, Percorso, Commento, Valutazione, Preferito
 from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine, FormDatiUtente, FormCambioPassword
 
+
 # ── COSTANTI ──────────────────────────────────────────────────────────────────
 
 GRADI_ORDINATI = [
@@ -356,4 +357,14 @@ def vista_profilo(request):
         'commenti_utente':   commenti_utente,
         'falesie_preferite': falesie_preferite,
         'percorsi_preferiti': percorsi_preferiti,
+    })
+
+
+#MAPPA
+def mappa(request):
+    falesie = list(Falesia.objects.all().values(
+        'id', 'nome', 'comune', 'regione', 'tipo_roccia', 'latitudine', 'longitudine'
+    ))
+    return render(request, 'generale/mappa.html', {
+        'falesie_json': falesie,
     })

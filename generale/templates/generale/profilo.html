@@ -6,7 +6,7 @@
 
 <div class="dettaglio-header">
 
-    <!-- ── AVATAR con matita ──────────────────────────────────────── -->
+    <!--AVATAR con matita -->
     <div class="avatar-wrapper-grande">
         {% if user.profilo.immagine_profilo %}
             <img src="{{ user.profilo.immagine_profilo.url }}"
@@ -22,7 +22,7 @@
                 title="Cambia foto profilo">✎</button>
     </div>
 
-    <!-- ── DATI UTENTE — ogni campo è un form autonomo ───────────── -->
+    <!-- DATI UTENTE -->
     <div class="dati">
 
         <!-- USERNAME -->
@@ -67,7 +67,7 @@
             {% endif %}
         </form>
 
-        <!-- PASSWORD — qui si apre il panel perché ha 3 campi -->
+        <!-- PASSWORD -->
         <div class="riga-dato">
             <label class="etichetta-campo">Password</label>
             <span class="valore-campo">••••••••</span>
@@ -78,7 +78,7 @@
     </div>
 </div>
 
-<!-- ── PANEL: modifica immagine ───────────────────────────────────────── -->
+<!-- PANEL: modifica immagine -->
 <div class="panel-modifica" id="panel-immagine" style="display:none;">
     <h3>Cambia foto profilo</h3>
     <form method="POST" enctype="multipart/form-data" class="form-panel">
@@ -100,7 +100,7 @@
     </form>
 </div>
 
-<!-- ── PANEL: cambia password ─────────────────────────────────────────── -->
+<!--PANEL: cambia password -->
 <div class="panel-modifica" id="panel-password" style="display:none;">
     <h3>Cambia password</h3>
     <form method="POST" class="form-panel">
@@ -124,7 +124,7 @@
     </form>
 </div>
 
-<!-- ── PREFERITI ───────────────────────────────────────────────────────── -->
+<!-- PREFERITI -->
 <div class="sezione-preferiti">
     <h2>I tuoi preferiti</h2>
     <div class="preferiti-liste">
@@ -175,7 +175,7 @@
     </div>
 </div>
 
-<!-- ── COMMENTI ───────────────────────────────────────────────────────── -->
+<!--COMMENTI -->
 <div class="commenti">
     <h2>I tuoi commenti</h2>
     {% for commento in commenti_utente %}

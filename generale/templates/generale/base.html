@@ -15,7 +15,7 @@
             <input type="text" name="q" placeholder="Cerca falesia o percorso...">
             <button type="submit">Cerca</button>
         </form>
-        <a href="#">Mappa</a>
+        <a href="{% url 'mappa' %}">Mappa</a>
         {% if user.is_authenticated %}
             <a href="{% url 'profilo' %}">Profilo</a>
             <form method="POST" action="{% url 'logout' %}" style="display:inline;">
@@ -42,5 +42,8 @@
     <footer>
         <p>Falesya by Ludovico Marino</p>
     </footer>
+
+    {% block scripts %}{% endblock %}
+    <script src="{% static 'generale/js/main.js' %}"></script>
 </body>
 </html>

@@ -1,3 +1,95 @@
+// MAPPA — eseguito solo se il div #mappa esiste nella pagina
+if (document.getElementById('mappa')) {
+
+    const falesie = JSON.parse(document.getElementById('falesie-data').textContent);
+
+    const mappa = L.map('mappa').setView([42.5, 12.5], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mappa);
+
+    const markers = {};
+    falesie.forEach(f => {
+        const marker = L.marker([f.latitudine, f.longitudine])
+            .addTo(mappa)
+            .bindPopup(`
+                <strong><a href="/falesia/${f.id}/">${f.nome}</a></strong><br>
+                ${f.comune}, ${f.regione}<br>
+                <em>${f.tipo_roccia}</em>
+            `);
+        markers[f.id] = marker;
+    });
+
+    function calcolaDistanza(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    const lista = document.getElementById('lista');
+    const statoGps = document.getElementById('stato-gps');
+
+    function popolaLista(falesieOrdinati) {
+        lista.innerHTML = '';
+        falesieOrdinati.forEach(f => {
+            const li = document.createElement('li');
+            const distanzaTesto = f.distanza !== undefined
+                ? `${f.distanza.toFixed(1)} km — ${f.comune}`
+                : f.comune;
+            li.innerHTML = `
+                <strong>${f.nome}</strong>
+                <span class="distanza">${distanzaTesto}</span>
+            `;
+            li.addEventListener('click', () => {
+                mappa.setView([f.latitudine, f.longitudine], 13);
+                markers[f.id].openPopup();
+            });
+            lista.appendChild(li);
+        });
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(posizione) {
+                const latUtente = posizione.coords.latitude;
+                const lonUtente = posizione.coords.longitude;
+
+                L.circleMarker([latUtente, lonUtente], {
+                    radius: 10,
+                    color: '#e94560',
+                    fillColor: '#e94560',
+                    fillOpacity: 0.8
+                }).addTo(mappa).bindPopup('Sei qui').openPopup();
+
+                mappa.setView([latUtente, lonUtente], 10);
+
+                const falesieConDistanza = falesie.map(f => ({
+                    ...f,
+                    distanza: calcolaDistanza(latUtente, lonUtente, f.latitudine, f.longitudine)
+                }));
+                falesieConDistanza.sort((a, b) => a.distanza - b.distanza);
+
+                statoGps.textContent = 'Falesie ordinate per distanza da te:';
+                popolaLista(falesieConDistanza);
+            },
+            function() {
+                statoGps.textContent = 'Posizione non disponibile. Elenco alfabetico:';
+                const falesieAlfabetiche = [...falesie].sort((a, b) => a.nome.localeCompare(b.nome));
+                popolaLista(falesieAlfabetiche);
+            }
+        );
+    }
+}
+
+
+
+
+
 // ── MODIFICA INLINE ───────────────────────────────────────────────────────────
 //
 // Ogni campo (username, email) ha:
