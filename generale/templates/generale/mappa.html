@@ -1,0 +1,21 @@
+{% extends 'generale/base.html' %}
+
+{% block contenuto %}
+<h1>Mappa delle Falesie</h1>
+
+<div id="mappa-container">
+    <div id="mappa"></div>
+    <div id="lista-falesie">
+        <h2>Falesie vicine</h2>
+        <p id="stato-gps">In attesa della tua posizione...</p>
+        <ul id="lista"></ul>
+    </div>
+</div>
+
+{{ falesie_json|json_script:"falesie-data" }}
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}

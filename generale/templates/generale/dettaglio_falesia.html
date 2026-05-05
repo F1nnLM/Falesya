@@ -8,11 +8,32 @@
     <img src="{{ falesia.immagine.url }}" alt="{{ falesia.nome }}">
     {% endif %}
     <div class="dati">
+        <div class="preferiti-header">
+            {% if user.is_authenticated %}
+            <form action="{% url 'toggle_preferito' %}" method="POST" class="form-preferito">
+                {% csrf_token %}
+                <input type="hidden" name="tipo" value="falesia">
+                <input type="hidden" name="id" value="{{ falesia.id }}">
+                <button type="submit" class="btn-preferito"
+                    title="{% if is_preferito %}Rimuovi dai preferiti{% else %}Aggiungi ai preferiti{% endif %}">
+                    {% if is_preferito %}
+                    <i class="bi bi-bookmark-heart-fill"></i>
+                    {% else %}
+                    <i class="bi bi-bookmark-heart"></i>
+                    {% endif %}
+                </button>
+            </form>
+            {% else %}
+            <a href="#" class="btn-preferito btn-preferito--disabilitato" title="Accedi per salvare nei preferiti">
+                <i class="bi bi-bookmark-heart"></i>
+            </a>
+            {% endif %}
+        </div>
         <p><strong>Tipo roccia:</strong> {{ falesia.get_tipo_roccia_display }}</p>
         <p><strong>Esposizione:</strong> {{ falesia.get_esposizione_display }}</p>
         <p><strong>Stagione consigliata:</strong> {{ falesia.get_stagione_consigliata_display }}</p>
         <p>
-            <strong>posizione:</strong> <a
+            <strong>Località:</strong> <a
                 href="https://www.google.com/maps/dir/?api=1&destination={{ falesia.latitudine }},{{ falesia.longitudine }}"
                 target="_blank">{{ falesia.comune }}, {{ falesia.provincia }}, {{ falesia.regione }} </a>
             <svg class="geo-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

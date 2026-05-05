@@ -8,6 +8,10 @@ a {
     color: inherit;
 }
 
+a:hover {
+    color: #e94560;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f5f5f5;
@@ -209,6 +213,8 @@ h2 {
 .dati {
     flex: 1;
     min-width: 200px;
+    position: relative;
+    padding-top: 1rem;
 }
 
 .dati p {
@@ -248,6 +254,7 @@ h2 {
     margin-left: 4px;
 }
 
+
 /* DESCRIZIONE */
 .descrizione {
     background: white;
@@ -257,8 +264,108 @@ h2 {
     margin-bottom: 1.5rem;
     line-height: 1.7;
 }
+ 
+/* Header descrizione con titolo + icona preferito */
+.preferiti-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-left: 1rem;
+    border-left: 1px solid #f0f0f0;
+}
+/* Azzera i margini di h2 dentro descrizione-header */
+.preferiti-header h2 {
+    margin: 0;
+}
+ 
+/* Bottone preferito */
+.form-preferito {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+ 
+.btn-preferito {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e94560;
+    font-size: 1.6rem;
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.15s, color 0.15s;
+    text-decoration: none;
+}
+ 
+.btn-preferito:hover {
+    transform: scale(1.2);
+    color: #c73652;
+}
+ 
+.btn-preferito--disabilitato {
+    color: #bbb;
+    cursor: default;
+}
+ 
+.btn-preferito--disabilitato:hover {
+    transform: none;
+    color: #bbb;
+}
+ 
 
 /* COMMENTI */
+.sezione-preferiti {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.sezione-preferiti h2 {
+    margin-bottom: 1rem;
+}
+
+.preferiti-liste {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
+}
+
+.preferiti-colonna h3 {
+    margin-bottom: 0.6rem;
+    color: #1a1a2e;
+    font-size: 1rem;
+}
+
+.lista-preferiti {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista-preferiti li {
+    margin-bottom: 0.5rem;
+}
+
+.lista-preferiti-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.lista-preferiti a {
+    color: #1a1a2e;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.lista-preferiti a:hover {
+    color: #e94560;
+}
+
 .commenti {
     margin-top: 1.5rem;
 }
@@ -1070,3 +1177,60 @@ img.avatar-grande {
     transition: color 0.15s;
 }
 .btn-annulla-inline:hover { color: #e94560; }
+
+/* MAPPA */
+#mappa-container {
+    display: flex;
+    gap: 1.5rem;
+    height: 600px;
+}
+
+#mappa {
+    flex: 2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#lista-falesie {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow-y: auto;
+}
+
+#lista-falesie h2 {
+    margin-top: 0;
+    border-left: 4px solid #e94560;
+    padding-left: 0.8rem;
+}
+
+#stato-gps {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 0.8rem;
+}
+
+#lista li {
+    list-style: none;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+
+#lista li:hover {
+    color: #e94560;
+}
+
+#lista li .distanza {
+    font-size: 0.8rem;
+    color: #aaa;
+    display: block;
+}
+
+#lista li strong {
+    display: block;
+    color: #1a1a2e;
+}

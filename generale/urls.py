@@ -18,4 +18,8 @@ urlpatterns = [
 
     # Commenti
     path('commento/<int:id>/elimina/', views.elimina_commento, name='elimina_commento'),
+    # Preferiti
+    path('preferito/toggle/', views.toggle_preferito, name='toggle_preferito'),
+    #mappa
+    path('mappa/', views.mappa, name='mappa'),
 ]
