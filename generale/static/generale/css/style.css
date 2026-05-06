@@ -14,11 +14,15 @@ a:hover {
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f5f5f5;
     color: #222;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background:
+    linear-gradient(135deg, #461482c3, #972f40bf),
+    url('../content/background2.jpg') center/cover no-repeat;
+    background-attachment: fixed;
+
 }
 
 /* NAVBAR */
@@ -28,7 +32,12 @@ nav {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+
+    position: sticky;   
+    top: 0;             
+    z-index: 100; 
 }
+
 
 nav a {
     color: #e0e0e0;
@@ -83,6 +92,20 @@ main {
     padding: 0 1.5rem;
 }
 
+
+.logo {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    margin: 5px;
+}
+.nav-brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    color: #e94560;
+    text-decoration: none;
+}
 /* HERO HOME */
 .hero {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -201,6 +224,7 @@ h2 {
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .dettaglio-header img {
