@@ -33,7 +33,7 @@ REGIONI_ITALIANE = [
 # ── HOME ──────────────────────────────────────────────────────────────────────
 
 def home(request):
-    # Prende le 6 falesie con media voto più alta.
+    # Prende le 3 falesie con media voto più alta.
     # annotate() aggiunge il campo calcolato media_voto a ogni oggetto Falesia
     # percorrendo il reverse FK verso Valutazione (valutazione__voto).
     # filter(media_voto__isnull=False) esclude falesie senza valutazioni.
@@ -43,8 +43,9 @@ def home(request):
         Falesia.objects
         .annotate(media_voto=Avg('valutazione__voto'))
         .filter(media_voto__isnull=False)
-        .order_by('-media_voto')[:6]
+        .order_by('-media_voto')[:3]
     )
+
     falesie_consigliate = [
         {
             'falesia': f,

@@ -18,8 +18,10 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8); /* Bianco 80% opaco */
+    backdrop-filter: blur(10px); /* Sfocatura di 10px */
+    -webkit-backdrop-filter: blur(10px);
     background:
-    linear-gradient(135deg, #461482c3, #972f40bf),
     url('../content/background2.jpg') center/cover no-repeat;
     background-attachment: fixed;
 
@@ -1106,7 +1108,7 @@ img.avatar-grande {
 
 .sottotitolo-consigliate {
     font-size: 0.85rem;
-    color: #888;
+    color: #363636;
     margin: 0.2rem 0 0 0;
 }
 
