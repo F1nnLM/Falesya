@@ -265,11 +265,11 @@ h2 {
 }
  
 .stella-piena-statica {
-    color: #f5a623;   /* giallo, stessa tinta delle stelle interattive */
+    color: #f5a623;
 }
  
 .stella-vuota-statica {
-    color: #ccc;      /* grigio */
+    color: #ccc;
 }
  
 .media-numero {
@@ -289,7 +289,6 @@ h2 {
     line-height: 1.7;
 }
  
-/* Header descrizione con titolo + icona preferito */
 .preferiti-header {
     position: absolute;
     top: 0;
@@ -297,12 +296,11 @@ h2 {
     padding-left: 1rem;
     border-left: 1px solid #f0f0f0;
 }
-/* Azzera i margini di h2 dentro descrizione-header */
+
 .preferiti-header h2 {
     margin: 0;
 }
  
-/* Bottone preferito */
 .form-preferito {
     margin: 0;
     padding: 0;
@@ -425,10 +423,8 @@ footer {
 
 /* ============================================================
    HOME — HERO CON BOX FILTRI
-   Queste regole sostituiscono .hero e .ricerca-box per la home.
    ============================================================ */
 
-/* sfondo navy che occupa tutta la larghezza */
 .hero-filtri {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     border-radius: 12px;
@@ -439,7 +435,6 @@ footer {
     align-items: center;
 }
 
-/* titolo bianco/rosso sopra il box */
 .hero-titolo {
     color: #e94560;
     font-size: 2.4rem;
@@ -449,7 +444,6 @@ footer {
     border: none;
 }
 
-/* box bianco al centro */
 .filtri-box {
     background: #ffffff;
     border-radius: 14px;
@@ -460,7 +454,6 @@ footer {
     overflow: visible;
 }
 
-/* ogni riga label + campo */
 .filtro-gruppo {
     margin-bottom: 1.3rem;
     flex: 1;
@@ -495,15 +488,9 @@ footer {
     border-color: #e94560;
 }
 
-/* riga con due select affiancati */
 .filtro-riga {
     display: flex;
     gap: 1rem;
-}
-
-/* SLIDER RANGE GRADO */
-.range-grado-box {
-    user-select: none;
 }
 
 /* SLIDER RANGE GRADO */
@@ -586,7 +573,7 @@ footer {
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* BOTTONE */
+/* BOTTONE CERCA */
 .btn-cerca {
     display: block;
     width: 100%;
@@ -734,13 +721,6 @@ footer {
 .invito-login a { color: #e94560; font-weight: 600; }
 
 /* VALUTAZIONE */
-
- 
-/*
-    Il container delle stelle: flexbox orizzontale, gap tra le icone,
-    rimosso il box e l'h2 precedente — ora le stelle stanno da sole
-    dentro .box-valutazione.
-*/
 .stelle-valutazione {
     display: flex;
     gap: 6px;
@@ -748,10 +728,6 @@ footer {
     margin-bottom: 1rem;
 }
  
-/*
-    Ogni label è cliccabile e mostra il cursore a mano.
-    position: relative serve per sovrapporre le due icone SVG.
-*/
 .stella-label {
     cursor: pointer;
     position: relative;
@@ -759,33 +735,24 @@ footer {
     line-height: 1;
 }
  
-/*
-    Entrambe le icone SVG (vuota e piena) sono sovrapposte.
-    .stella-vuota è visibile di default (colore grigio chiaro).
-    .stella-piena è nascosta di default.
-*/
 .stella-icona {
     display: block;
     transition: opacity 0.1s ease;
 }
  
 .stella-vuota {
-    color: #ccc;      /* grigio */
+    color: #ccc;
     opacity: 1;
 }
  
 .stella-piena {
-    color: #f5a623;   /* giallo/arancio stella */
+    color: #f5a623;
     opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
 }
  
-/*
-    Quando la label ha la classe .stella-attiva (aggiunta via JS):
-    nascondi la stella vuota, mostra la piena.
-*/
 .stella-label.stella-attiva .stella-vuota {
     opacity: 0;
 }
@@ -794,14 +761,13 @@ footer {
     opacity: 1;
 }
  
-/* Il box valutazione: sfondo bianco, bordo arrotondato, padding */
 .box-valutazione {
     background: white;
     padding: 1.2rem 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-bottom: 1.5rem;
-    display: inline-block;  /* si restringe al contenuto, no larghezza piena */
+    display: inline-block;
     text-align: center;
 }
 
@@ -810,9 +776,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
-
 
 img.avatar-grande {
     width: 100px;
@@ -832,9 +796,8 @@ img.avatar-grande {
     align-items: center;
     justify-content: center;
 }
-/* .form-immagine non più usata — sostituita dai panel */
 
-/* ── LOGOUT NAV ──────────────────────────────────────────────────────────── */
+/* LOGOUT NAV */
 .btn-logout {
     background: none;
     border: 1px solid #e94560;
@@ -846,62 +809,6 @@ img.avatar-grande {
     font-size: 0.9rem;
 }
 .btn-logout:hover { background-color: #e94560; color: white; }
-
-/* ── MESSAGGI FLASH ──────────────────────────────────────────────────────── */
-.messaggi-flash {
-    max-width: 1100px;
-    margin: 1rem auto 0;
-    padding: 0 1.5rem;
-}
-.messaggio {
-    padding: 0.7rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-}
-.messaggio-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
-.messaggio-error   { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
-.messaggio-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
-
-/* ── FORM AUTH ───────────────────────────────────────────────────────────── */
-.form-auth {
-    max-width: 420px;
-    margin: 3rem auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-}
-.form-auth h1 { margin-bottom: 1.5rem; text-align: center; }
-.campo { margin-bottom: 1.2rem; }
-.campo label { display: block; font-weight: 600; margin-bottom: 0.3rem; color: #1a1a2e; }
-.campo input {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-.campo input:focus { outline: none; border-color: #e94560; }
-.errore { color: #dc3545; font-size: 0.85rem; display: block; margin-top: 0.2rem; }
-.aiuto  { color: #888; font-size: 0.8rem; display: block; margin-top: 0.2rem; }
-.link-auth { text-align: center; margin-top: 1rem; color: #666; }
-.link-auth a { color: #e94560; font-weight: 600; }
-
-/* ── PULSANTI ─────────────────────────────────────────────────────────────── */
-.btn-primario {
-    background-color: #e94560;
-    color: white;
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-}
-.btn-primario:hover { background-color: #c73652; }
-.btn-primario.btn-small { width: auto; padding: 0.4rem 1rem; font-size: 0.9rem; }
 
 .btn-annulla {
     background: none;
@@ -915,84 +822,7 @@ img.avatar-grande {
 }
 .btn-annulla:hover { border-color: #999; color: #333; }
 
-/* ── AVATAR NEI COMMENTI ─────────────────────────────────────────────────── */
-.commento-header {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 0.5rem;
-}
-.avatar-wrapper { flex-shrink: 0; }
-.avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.avatar-placeholder {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background-color: #e94560;
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.data-commento { color: #999; font-size: 0.85rem; margin-left: 0.4rem; }
-
-/* ── ELIMINA COMMENTO ────────────────────────────────────────────────────── */
-.form-elimina { margin-left: auto; }
-.btn-elimina {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.2rem 0.4rem;
-}
-.btn-elimina:hover { color: #e94560; }
-
-/* ── FORM COMMENTO ───────────────────────────────────────────────────────── */
-.form-commento { margin-bottom: 1.5rem; }
-.form-commento textarea {
-    width: 100%;
-    padding: 0.7rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    resize: vertical;
-    margin-bottom: 0.5rem;
-    font-family: inherit;
-}
-.form-commento textarea:focus { outline: none; border-color: #e94560; }
-.invito-login { color: #666; margin-bottom: 1rem; }
-.invito-login a { color: #e94560; font-weight: 600; }
-
-/* ── VALUTAZIONE ─────────────────────────────────────────────────────────── */
-.box-valutazione {
-    background: white;
-    padding: 1.2rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 1.5rem;
-}
-.stelle-radio { display: flex; gap: 1rem; margin: 0.8rem 0; }
-.stella {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #555;
-}
-.stella input[type="radio"]:checked + span,
-.stella:has(input:checked) { color: #e94560; font-weight: 700; }
-
-/* ── PROFILO — riga dato con matita ──────────────────────────────────────── */
+/* PROFILO — riga dato con matita */
 .riga-dato {
     display: flex;
     align-items: center;
@@ -1043,7 +873,7 @@ img.avatar-grande {
 }
 .matita-avatar:hover { border-color: #e94560; color: #e94560; }
 
-/* ── PANEL MODIFICA ──────────────────────────────────────────────────────── */
+/* PANEL MODIFICA */
 .panel-modifica {
     background: white;
     border-radius: 10px;
@@ -1107,9 +937,7 @@ img.avatar-grande {
     white-space: nowrap;
 }
 
-/* ── CAMPI INLINE EDITABILI ──────────────────────────────────────────────── */
-
-/* Riga per i campi con modifica inline (username, email) */
+/* CAMPI INLINE EDITABILI */
 .riga-dato-form {
     display: flex;
     align-items: center;
@@ -1117,15 +945,6 @@ img.avatar-grande {
     padding: 0.5rem 0;
     border-bottom: 1px solid #f0f0f0;
     flex-wrap: wrap;
-}
-
-/* Riga statica (password) */
-.riga-dato {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #f0f0f0;
 }
 
 .etichetta-campo {
@@ -1144,9 +963,6 @@ img.avatar-grande {
     color: #222;
 }
 
-/* Input che di default sembra testo normale —
-   nessun bordo, nessuno sfondo, stessa font del body.
-   readonly lo rende non editabile ma visivamente pulito. */
 .input-inline {
     flex: 1;
     border: none;
@@ -1162,14 +978,12 @@ img.avatar-grande {
     min-width: 0;
 }
 
-/* Quando l'input è attivo (readonly rimosso via JS) */
 .input-inline-attivo {
     border-bottom-color: #e94560;
     background: #fff8f9;
     border-radius: 4px 4px 0 0;
 }
 
-/* Contenitore ✓ / ✕ — flex row, nascosto di default */
 .riga-azioni {
     display: flex;
     gap: 0.3rem;
@@ -1257,4 +1071,168 @@ img.avatar-grande {
 #lista li strong {
     display: block;
     color: #1a1a2e;
+}
+
+/* ── SEZIONE FALESIE CONSIGLIATE (HOME) ──────────────────────────────────── */
+
+.sezione-consigliate {
+    margin-top: 2.5rem;
+}
+
+.sezione-consigliate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Override del h2 globale: questo non ha border-left perché l'icona fa da separatore */
+.titolo-consigliate {
+    font-size: 1.4rem;
+    color: #1a1a2e;
+    margin: 0 0 0.2rem 0;
+    border-left: 4px solid #e94560;
+    padding-left: 0.8rem;
+    border: none;
+    padding-left: 0;
+}
+
+.titolo-consigliate i {
+    color: #e94560;
+    margin-right: 0.4rem;
+}
+
+.sottotitolo-consigliate {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0.2rem 0 0 0;
+}
+
+.link-vedi-tutte {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e94560;
+    text-decoration: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.link-vedi-tutte:hover { color: #c73652; }
+
+/* Griglia 3 colonne responsive */
+.griglia-consigliate {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+}
+
+@media (max-width: 900px) {
+    .griglia-consigliate { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+    .griglia-consigliate { grid-template-columns: 1fr; }
+}
+
+/* La card è un <a>: azzera decorazioni link */
+.card-consigliata {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card-consigliata:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    color: inherit;
+}
+
+/* Immagine in cima */
+.card-consigliata-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Placeholder quando non c'è immagine */
+.card-consigliata-placeholder {
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #ccc;
+}
+
+/* Corpo della card */
+.card-consigliata-body {
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+}
+
+.card-consigliata-nome {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+    line-height: 1.3;
+}
+.card-consigliata:hover .card-consigliata-nome {
+    color: #e94560;
+}
+
+.card-consigliata-meta,
+.card-consigliata-roccia {
+    font-size: 0.82rem;
+    color: #666;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.card-consigliata-meta i,
+.card-consigliata-roccia i {
+    color: #e94560;
+    flex-shrink: 0;
+}
+
+/* Stelle Bootstrap Icons */
+.card-consigliata-stelle {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    margin-top: 0.3rem;
+}
+.stella-card-piena { color: #f5a623; font-size: 0.95rem; }
+.stella-card-vuota { color: #ddd;    font-size: 0.95rem; }
+
+.card-consigliata-voto {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 5px;
+}
+
+/* Badge stagione in fondo */
+.card-consigliata-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: auto;
+    padding-top: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #e94560;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
