@@ -1,8 +1,10 @@
 {% extends 'generale/base.html' %}
+{% load static %}
 
 {% block contenuto %}
 <section class="hero-filtri">
     <h1 class="hero-titolo">Trova la tua falesia</h1>
+    <p class="hero-sottotitolo">Cerca, esplora e condividi i migliori spot di arrampicata in Italia</p>
 
     <div class="filtri-box">
         <form action="{% url 'risultati' %}" method="GET" id="form-ricerca">
@@ -68,9 +70,91 @@
 </section>
 
 <section class="info-sito">
-    <h2>Cos'è Falesya?</h2>
-    <p>La guida digitale per gli arrampicatori. Trova falesie, consulta i percorsi e condividi le tue esperienze.</p>
+    <h2><i class="bi bi-compass"></i>Cos'è Falesya?</h2>
+    <p class="sottotitolo-info">La tua guida definitiva per l'arrampicata in Italia</p>
+    <p>Trova la falesia perfetta in base alla stagione, alla difficoltà e allo stile di scalata. Unisciti alla community per salvare i tuoi percorsi preferiti e contribuire a mappare la bellezza verticale del nostro territorio.</p>
+    
+    <div class="info-sito-features">
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-search"></i></div>
+            <strong>Cerca & Filtra</strong>
+            <p>Trova falesie per regione, difficoltà e tipo di roccia</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-star-fill"></i></div>
+            <strong>Vota & Commenta</strong>
+            <p>Condividi le tue esperienze con la community</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-heart-fill"></i></div>
+            <strong>Salva Preferiti</strong>
+            <p>Raccogli le tue falesie favorite in un unico posto</p>
+        </div>
+    </div>
 </section>
+
+{% if falesie_consigliate %}
+<section class="sezione-consigliate">
+    <div class="sezione-consigliate-header">
+        <div>
+            <h2 class="titolo-consigliate">
+                <i class="bi bi-award-fill"></i> Falesie consigliate
+            </h2>
+            <p class="sottotitolo-consigliate">Le meglio valutate dalla community</p>
+        </div>
+        <a href="{% url 'risultati' %}" class="link-vedi-tutte">
+            Vedi tutte <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="griglia-consigliate">
+        {% for item in falesie_consigliate %}
+        <a href="{% url 'dettaglio_falesia' item.falesia.id %}" class="card-consigliata">
+
+            {% if item.falesia.immagine %}
+                <img src="{{ item.falesia.immagine.url }}"
+                     alt="{{ item.falesia.nome }}"
+                     class="card-consigliata-img">
+            {% else %}
+                <div class="card-consigliata-img card-consigliata-placeholder">
+                    <i class="bi bi-image"></i>
+                </div>
+            {% endif %}
+
+            <div class="card-consigliata-body">
+                <h3 class="card-consigliata-nome">{{ item.falesia.nome }}</h3>
+
+                <p class="card-consigliata-meta">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    {{ item.falesia.comune }}, {{ item.falesia.regione }}
+                </p>
+
+                <p class="card-consigliata-roccia">
+                    <i class="bi bi-layers-fill"></i>
+                    {{ item.falesia.get_tipo_roccia_display }}
+                </p>
+
+                <div class="card-consigliata-stelle">
+                    {% for n in "12345" %}
+                        {% if forloop.counter <= item.media_voto_int %}
+                            <i class="bi bi-star-fill stella-card-piena"></i>
+                        {% else %}
+                            <i class="bi bi-star stella-card-vuota"></i>
+                        {% endif %}
+                    {% endfor %}
+                    <span class="card-consigliata-voto">{{ item.media_voto|floatformat:1 }}</span>
+                </div>
+
+                <span class="card-consigliata-badge">
+                    <i class="bi bi-sun"></i> {{ item.falesia.get_stagione_consigliata_display }}
+                </span>
+            </div>
+
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 <script>
 const GRADI = ['1','2','3','4a','4b','4c','5a','5b','5c','6a','6a+','6b','6b+','6c','6c+','7a','7a+','7b','7b+','7c','7c+','8a','8a+','8b','8b+','8c','8c+'];

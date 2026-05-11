@@ -11,7 +11,7 @@ from .models import Falesia, Percorso, Commento, Valutazione, Preferito
 from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine, FormDatiUtente, FormCambioPassword
 
 
-# ── COSTANTI ──────────────────────────────────────────────────────────────────
+#COSTANTI
 
 GRADI_ORDINATI = [
     '1', '2', '3',
@@ -30,16 +30,33 @@ REGIONI_ITALIANE = [
 ]
 
 
-# ── HOME ──────────────────────────────────────────────────────────────────────
+#HOME
 
 def home(request):
+    falesie_raw = (
+        Falesia.objects
+        .annotate(media_voto=Avg('valutazione__voto'))
+        .filter(media_voto__isnull=False)
+        .order_by('-media_voto')[:3]
+    )
+
+    falesie_consigliate = [
+        {
+            'falesia': f,
+            'media_voto': f.media_voto,
+            'media_voto_int': round(f.media_voto),
+        }
+        for f in falesie_raw
+    ]
+
     return render(request, 'generale/home.html', {
         'gradi': GRADI_ORDINATI,
         'regioni': REGIONI_ITALIANE,
+        'falesie_consigliate': falesie_consigliate,
     })
 
 
-# ── RICERCA / FILTRI ──────────────────────────────────────────────────────────
+#RICERCA / FILTRI
 
 def risultati(request):
     query         = request.GET.get('q', '')
@@ -95,7 +112,7 @@ def risultati(request):
     })
 
 
-# ── DETTAGLIO FALESIA ─────────────────────────────────────────────────────────
+#DETTAGLIO FALESIA
 
 def dettaglio_falesia(request, id):
     falesia  = get_object_or_404(Falesia, id=id)
@@ -152,7 +169,7 @@ def dettaglio_falesia(request, id):
     })
 
 
-# ── DETTAGLIO PERCORSO ────────────────────────────────────────────────────────
+#DETTAGLIO PERCORSO
 
 def dettaglio_percorso(request, id):
     percorso = get_object_or_404(Percorso, id=id)
@@ -193,9 +210,6 @@ def dettaglio_percorso(request, id):
                 v.save()
                 messages.success(request, 'Valutazione salvata.')
                 return redirect('dettaglio_percorso', id=id)
-            
-
-
 
     return render(request, 'generale/dettaglio_percorso.html', {
         'percorso':         percorso,
@@ -208,12 +222,14 @@ def dettaglio_percorso(request, id):
         'is_preferito':     is_preferito,
     })
 
+
 #PREFERITO
+
 @login_required
 @require_POST
 def toggle_preferito(request):
-    tipo = request.POST.get('tipo')       # 'falesia' o 'percorso'
-    oggetto_id = request.POST.get('id')   # id numerico dell'oggetto
+    tipo = request.POST.get('tipo')
+    oggetto_id = request.POST.get('id')
 
     if tipo == 'falesia':
         falesia = get_object_or_404(Falesia, id=oggetto_id)
@@ -222,7 +238,6 @@ def toggle_preferito(request):
             falesia=falesia,
         )
         if not created:
-            # Esisteva già → rimuovi
             preferito.delete()
 
     elif tipo == 'percorso':
@@ -234,10 +249,10 @@ def toggle_preferito(request):
         if not created:
             preferito.delete()
 
-    # Torna alla pagina precedente (la falesia o il percorso)
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
-# ── ELIMINA COMMENTO ──────────────────────────────────────────────────────────
+
+#ELIMINA COMMENTO
 
 @login_required
 def elimina_commento(request, id):
@@ -251,7 +266,7 @@ def elimina_commento(request, id):
     return dest
 
 
-# ── AUTENTICAZIONE ────────────────────────────────────────────────────────────
+#AUTENTICAZIONE
 
 def vista_login(request):
     if request.user.is_authenticated:
@@ -287,21 +302,17 @@ def vista_registrazione(request):
     return render(request, 'generale/registrazione.html', {'form': form})
 
 
-# ── PROFILO ───────────────────────────────────────────────────────────────────
+#PROFILO
 
 @login_required
 def vista_profilo(request):
     profilo = request.user.profilo
 
-    # Inizializziamo tutti e tre i form vuoti (per il GET)
     form_img      = FormProfiloImmagine(instance=profilo)
     form_dati     = FormDatiUtente(instance=request.user)
     form_password = FormCambioPassword(user=request.user)
 
     if request.method == 'POST':
-
-        # Il campo 'azione' nell'HTML ci dice quale form è stato inviato,
-        # così possiamo gestirli separatamente nella stessa view.
 
         if 'salva_immagine' in request.POST:
             form_img = FormProfiloImmagine(request.POST, request.FILES, instance=profilo)
@@ -333,8 +344,6 @@ def vista_profilo(request):
             form_password = FormCambioPassword(user=request.user, data=request.POST)
             if form_password.is_valid():
                 form_password.salva()
-                # Dopo aver cambiato la password Django invalida la sessione,
-                # quindi bisogna ri-autenticare l'utente per non farlo sloggare.
                 from django.contrib.auth import update_session_auth_hash
                 update_session_auth_hash(request, request.user)
                 messages.success(request, 'Password aggiornata.')
@@ -351,16 +360,17 @@ def vista_profilo(request):
     ).select_related('percorso')
 
     return render(request, 'generale/profilo.html', {
-        'form_img':          form_img,
-        'form_dati':         form_dati,
-        'form_password':     form_password,
-        'commenti_utente':   commenti_utente,
-        'falesie_preferite': falesie_preferite,
+        'form_img':           form_img,
+        'form_dati':          form_dati,
+        'form_password':      form_password,
+        'commenti_utente':    commenti_utente,
+        'falesie_preferite':  falesie_preferite,
         'percorsi_preferiti': percorsi_preferiti,
     })
 
 
 #MAPPA
+
 def mappa(request):
     falesie = list(Falesia.objects.all().values(
         'id', 'nome', 'comune', 'regione', 'tipo_roccia', 'latitudine', 'longitudine'
@@ -368,3 +378,4 @@ def mappa(request):
     return render(request, 'generale/mappa.html', {
         'falesie_json': falesie,
     })
+
