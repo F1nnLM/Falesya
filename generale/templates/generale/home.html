@@ -4,6 +4,7 @@
 {% block contenuto %}
 <section class="hero-filtri">
     <h1 class="hero-titolo">Trova la tua falesia</h1>
+    <p class="hero-sottotitolo">Cerca, esplora e condividi i migliori spot di arrampicata in Italia</p>
 
     <div class="filtri-box">
         <form action="{% url 'risultati' %}" method="GET" id="form-ricerca">
@@ -69,8 +70,27 @@
 </section>
 
 <section class="info-sito">
-    <h2>Cos'è Falesya?</h2>
-    <p>La guida digitale per gli arrampicatori. Trova falesie, consulta i percorsi e condividi le tue esperienze.</p>
+    <h2><i class="bi bi-compass"></i>Cos'è Falesya?</h2>
+    <p class="sottotitolo-info">La tua guida definitiva per l'arrampicata in Italia</p>
+    <p>Trova la falesia perfetta in base alla stagione, alla difficoltà e allo stile di scalata. Unisciti alla community per salvare i tuoi percorsi preferiti e contribuire a mappare la bellezza verticale del nostro territorio.</p>
+    
+    <div class="info-sito-features">
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-search"></i></div>
+            <strong>Cerca & Filtra</strong>
+            <p>Trova falesie per regione, difficoltà e tipo di roccia</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-star-fill"></i></div>
+            <strong>Vota & Commenta</strong>
+            <p>Condividi le tue esperienze con la community</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon"><i class="bi bi-heart-fill"></i></div>
+            <strong>Salva Preferiti</strong>
+            <p>Raccogli le tue falesie favorite in un unico posto</p>
+        </div>
+    </div>
 </section>
 
 {% if falesie_consigliate %}

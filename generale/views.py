@@ -11,7 +11,7 @@ from .models import Falesia, Percorso, Commento, Valutazione, Preferito
 from .forms import FormRegistrazione, FormCommento, FormValutazione, FormProfiloImmagine, FormDatiUtente, FormCambioPassword
 
 
-# ── COSTANTI ──────────────────────────────────────────────────────────────────
+#COSTANTI
 
 GRADI_ORDINATI = [
     '1', '2', '3',
@@ -30,15 +30,9 @@ REGIONI_ITALIANE = [
 ]
 
 
-# ── HOME ──────────────────────────────────────────────────────────────────────
+#HOME
 
 def home(request):
-    # Prende le 3 falesie con media voto più alta.
-    # annotate() aggiunge il campo calcolato media_voto a ogni oggetto Falesia
-    # percorrendo il reverse FK verso Valutazione (valutazione__voto).
-    # filter(media_voto__isnull=False) esclude falesie senza valutazioni.
-    # Costruiamo una lista di dizionari per avere media_voto_int già pronto
-    # come intero — serve nel template per il confronto con forloop.counter.
     falesie_raw = (
         Falesia.objects
         .annotate(media_voto=Avg('valutazione__voto'))
@@ -62,7 +56,7 @@ def home(request):
     })
 
 
-# ── RICERCA / FILTRI ──────────────────────────────────────────────────────────
+#RICERCA / FILTRI
 
 def risultati(request):
     query         = request.GET.get('q', '')
@@ -118,7 +112,7 @@ def risultati(request):
     })
 
 
-# ── DETTAGLIO FALESIA ─────────────────────────────────────────────────────────
+#DETTAGLIO FALESIA
 
 def dettaglio_falesia(request, id):
     falesia  = get_object_or_404(Falesia, id=id)
@@ -175,7 +169,7 @@ def dettaglio_falesia(request, id):
     })
 
 
-# ── DETTAGLIO PERCORSO ────────────────────────────────────────────────────────
+#DETTAGLIO PERCORSO
 
 def dettaglio_percorso(request, id):
     percorso = get_object_or_404(Percorso, id=id)
@@ -229,7 +223,7 @@ def dettaglio_percorso(request, id):
     })
 
 
-# ── PREFERITO ─────────────────────────────────────────────────────────────────
+#PREFERITO
 
 @login_required
 @require_POST
@@ -258,7 +252,7 @@ def toggle_preferito(request):
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
-# ── ELIMINA COMMENTO ──────────────────────────────────────────────────────────
+#ELIMINA COMMENTO
 
 @login_required
 def elimina_commento(request, id):
@@ -272,7 +266,7 @@ def elimina_commento(request, id):
     return dest
 
 
-# ── AUTENTICAZIONE ────────────────────────────────────────────────────────────
+#AUTENTICAZIONE
 
 def vista_login(request):
     if request.user.is_authenticated:
@@ -308,7 +302,7 @@ def vista_registrazione(request):
     return render(request, 'generale/registrazione.html', {'form': form})
 
 
-# ── PROFILO ───────────────────────────────────────────────────────────────────
+#PROFILO
 
 @login_required
 def vista_profilo(request):
@@ -375,7 +369,7 @@ def vista_profilo(request):
     })
 
 
-# ── MAPPA ─────────────────────────────────────────────────────────────────────
+#MAPPA
 
 def mappa(request):
     falesie = list(Falesia.objects.all().values(
@@ -384,3 +378,4 @@ def mappa(request):
     return render(request, 'generale/mappa.html', {
         'falesie_json': falesie,
     })
+
